@@ -26,16 +26,16 @@ JS_PV_FILES = \
 	src/color/Color.js \
 	src/color/Colors.js \
 	src/color/Ramp.js \
-	src/scene/SvgScene.js \
-	src/scene/SvgArea.js \
-	src/scene/SvgBar.js \
-	src/scene/SvgDot.js \
-	src/scene/SvgImage.js \
-	src/scene/SvgLabel.js \
-	src/scene/SvgLine.js \
-	src/scene/SvgPanel.js \
-	src/scene/SvgRule.js \
-	src/scene/SvgWedge.js \
+	src/scene/svg/SvgScene.js \
+	src/scene/svg/SvgArea.js \
+	src/scene/svg/SvgBar.js \
+	src/scene/svg/SvgDot.js \
+	src/scene/svg/SvgImage.js \
+	src/scene/svg/SvgLabel.js \
+	src/scene/svg/SvgLine.js \
+	src/scene/svg/SvgPanel.js \
+	src/scene/svg/SvgRule.js \
+	src/scene/svg/SvgWedge.js \
 	src/mark/Mark.js \
 	src/mark/Anchor.js \
 	src/mark/Area.js \
