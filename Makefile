@@ -36,6 +36,7 @@ JS_PV_FILES = \
 	src/scene/svg/SvgPanel.js \
 	src/scene/svg/SvgRule.js \
 	src/scene/svg/SvgWedge.js \
+	src/scene/Scene.js \
 	src/mark/Mark.js \
 	src/mark/Anchor.js \
 	src/mark/Area.js \
