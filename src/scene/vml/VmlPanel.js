@@ -4,66 +4,85 @@
  * - z-index
  */
 
-pv.VmlPanel = function() { this.children = []; };
-pv.VmlPanel.prototype = pv.extend(pv.VmlSprite);
+pv.VmlScene.panel = function(scenes) {
+  var g = scenes.$g, e = g && g.firstChild;
+  for (var i = 0; i < scenes.length; i++) {
+    var s = scenes[i];
 
-pv.VmlPanel.prototype.update = function(parentNode) {
-  var vml = this.$dom;
+    /* visible */
+    if (!s.visible) continue;
 
-  /* Create VML elements as needed. */
-  if (this.visible) {
-    if (!vml) {
-      vml = this.$dom = {};
-      if (!this.parent) {
-        this.canvas.style.position = "relative";
-        if (this.canvas.firstChild) {
-          vml.root = this.canvas.firstChild;
-        } else {
-          this.canvas.appendChild(vml.root = this.create("v:group"));
-        }
-      } else {
-        vml.root = this.insert("v:group");
+    /* vml */
+    if (!scenes.parent) {
+      s.canvas.style.position = "relative";
+      g = s.canvas.firstChild;
+      if (!g) {
+        s.canvas.appendChild(g = this.create("v:group"));
       }
+      scenes.$g = g;
+      var width = s.width + s.left + s.right;
+      var height = s.height + s.top + s.bottom;
+      g.style.width = width;
+      g.style.height = height;
+      g.coordsize = width + "," + height;
+      if (typeof e == "undefined") e = g.firstChild;
     }
-    vml.root.style.display = "";
-  } else {
-    if (vml) vml.root.style.display = "none";
-    return;
+
+    /* fill */
+    e = this.fill(e, scenes, i);
+
+    /* children */
+    for (var j = 0; j < s.children.length; j++) {
+      s.children[j].$g = e = this.expect("v:group", e);
+      e.style.width = s.width;
+      e.style.height = s.height;
+      e.style.left = s.left;
+      e.style.top = s.top;
+      e.coordsize = s.width + "," + s.height;
+      this.updateAll(s.children[j]);
+      if (!e.parentNode || e.parentNode.nodeType == 11) g.appendChild(e);
+      e = e.nextSibling;
+    }
+
+    /* stroke */
+    e = this.stroke(e, scenes, i);
   }
+  return e;
+};
 
-  if (!this.parent) {
-    this.canvas.style.width = this.width;
-    this.canvas.style.height = this.height;
-    this.canvas.style.overflow = "hidden";
+pv.VmlScene.fill = function(e, scenes, i) {
+  var s = scenes[i], fill = pv.color(s.fillStyle);
+  if (fill.opacity) {
+    e = this.expect("v:rect", e);
+    e.style.left = s.left;
+    e.style.top = s.top;
+    e.style.width = s.width;
+    e.style.height = s.height;
+    e.style.cursor = s.cursor;
+    var c = e.appendChild(this.create("v:fill"));
+    c.color = fill.color;
+    c.opacity = fill.opacity;
+    e = this.append(e, scenes, i);
   }
+  return e;
+};
 
-  vml.root.style.position = "absolute";
-  vml.root.style.width = this.width;
-  vml.root.style.height = this.height;
-  vml.root.style.left = this.left;
-  vml.root.style.top = this.top;
-  vml.root.coordsize = this.width + "," + this.height;
-
-//   /* rect */
-//   if (vml.rect || this.fillStyle || this.strokeStyle) {
-//     if (!vml.rect) vml.g.insertBefore(vml.rect = this.create("rect"), vml.g.firstChild);
-//     this.apply(vml.rect, {
-//         "title": this.title,
-//         "cursor": this.cursor,
-//         "width": Math.max(1E-10, this.width),
-//         "height": Math.max(1E-10, this.height),
-//         "fill": this.fillStyle,
-//         "stroke": this.strokeStyle,
-//         "stroke-width": this.strokeStyle ? this.lineWidth : 0
-//       });
-
-//     /* events */
-//     this.listen(vml.rect);
-//   }
-
-  /* children */
-  for (var i = 0; i < this.children.length; i++) {
-    var siblings = this.children[i];
-    if (siblings.length) siblings[0].updateAll(siblings);
+pv.VmlScene.stroke = function(e, scenes, i) {
+  var s = scenes[i], stroke = pv.color(s.strokeStyle);
+  if (stroke.opacity) {
+    e = this.expect("v:rect", e);
+    e.style.left = s.left;
+    e.style.top = s.top;
+    e.style.width = s.width;
+    e.style.height = s.height;
+    e.style.cursor = s.cursor;
+    var f = e.appendChild(this.create("v:fill"));
+    f.opacity = 0;
+    var c = e.appendChild(this.create("v:stroke"));
+    c.color = stroke.color;
+    c.opacity = stroke.opacity * Math.min(s.lineWidth, 1);
+    c.weight = s.lineWidth + "px";
+    e = this.append(e, scenes, i);
   }
+  return e;
 };

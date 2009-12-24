@@ -1,48 +1,43 @@
-pv.VmlLine = function() {};
-pv.VmlLine.prototype = pv.extend(pv.VmlSprite);
+pv.VmlScene.line = function(scenes) {
+  var e = scenes.$g.firstChild;
+  if (scenes.length < 2) return e;
+  var s = scenes[0];
 
-pv.VmlLine.prototype.updateAll = function(siblings) {
-  var vml = this.$dom;
+  /* segmented */
+  if (s.segmented) return this.lineSegment(scenes);
 
-  /* Create VML elements as needed. */
-  if (this.visible) {
-    if (!vml) {
-      vml = this.$dom = {root: this.insert("v:shape")};
-      vml.root.appendChild(vml.path = this.create("v:path"));
-      vml.root.appendChild(vml.fill = this.create("v:fill"));
-      vml.root.appendChild(vml.stroke = this.create("v:stroke"));
-    }
-    vml.root.style.display = "";
-  } else {
-    if (vml) vml.root.style.display = "none";
-    return;
-  }
+  /* visible */
+  if (!s.visible) return e;
+  var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+  if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */
   var p;
-  for (var i = 0; i < siblings.length; i++) {
-    var s = siblings[i], x = Math.round(s.left), y = Math.round(s.top);
+  for (var i = 0; i < scenes.length; i++) {
+    var si = scenes[i], x = Math.round(si.left), y = Math.round(si.top);
     if (isNaN(x)) x = 0;
     if (isNaN(y)) y = 0;
     if (!p) p = "m" + x + "," + y + "l";
     else p += x + "," + y + " ";
   }
 
+  e = this.expect("v:shape", e);
+  var vml = {root: e};
+  vml.root.appendChild(vml.path = this.create("v:path"));
+  vml.root.appendChild(vml.fill = this.create("v:fill"));
+  vml.root.appendChild(vml.stroke = this.create("v:stroke"));
+
   /* polygon */
   vml.root.style.width = "100%";
   vml.root.style.height = "100%";
-  vml.root.style.cursor = this.cursor;
-  vml.root.title = this.title || "";
+  vml.root.style.cursor = s.cursor;
+  vml.root.title = s.title || "";
   vml.path.v = p;
 
-  var fill = pv.color(this.fillStyle);
   vml.fill.color = fill.color;
   vml.fill.opacity = fill.opacity;
-  var stroke = pv.color(this.strokeStyle);
   vml.stroke.color = stroke.color;
-  vml.stroke.opacity = stroke.opacity * Math.min(this.lineWidth, 1);
-  vml.stroke.weight = this.lineWidth + "px";
-
-  /* events */
-  this.listen(vml.root);
+  vml.stroke.opacity = stroke.opacity * Math.min(s.lineWidth, 1);
+  vml.stroke.weight = s.lineWidth + "px";
+  return this.append(e, scenes, 0);
 };

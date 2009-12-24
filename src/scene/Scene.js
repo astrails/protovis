@@ -2,7 +2,9 @@
  * @private
  * @namespace
  */
-pv.Scene = pv.SvgScene;
+pv.Scene = document.implementation.hasFeature(
+    "http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")
+    ? pv.SvgScene : pv.VmlScene;
 
 /**
  * Updates the display for the specified array of scene nodes.

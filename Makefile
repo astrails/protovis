@@ -36,6 +36,16 @@ JS_PV_FILES = \
 	src/scene/svg/SvgPanel.js \
 	src/scene/svg/SvgRule.js \
 	src/scene/svg/SvgWedge.js \
+	src/scene/vml/VmlScene.js \
+	src/scene/vml/VmlArea.js \
+	src/scene/vml/VmlBar.js \
+	src/scene/vml/VmlDot.js \
+	src/scene/vml/VmlImage.js \
+	src/scene/vml/VmlLabel.js \
+	src/scene/vml/VmlLine.js \
+	src/scene/vml/VmlPanel.js \
+	src/scene/vml/VmlRule.js \
+	src/scene/vml/VmlWedge.js \
 	src/scene/Scene.js \
 	src/mark/Mark.js \
 	src/mark/Anchor.js \

@@ -1,37 +1,33 @@
-pv.VmlBar = function() {};
-pv.VmlBar.prototype = pv.extend(pv.VmlSprite);
+pv.VmlScene.bar = function(scenes) {
+  var e = scenes.$g.firstChild;
+  for (var i = 0; i < scenes.length; i++) {
+    var s = scenes[i];
 
-pv.VmlBar.prototype.update = function() {
-  var vml = this.$dom;
+    /* visible */
+    if (!s.visible) continue;
+    var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+    if (!fill.opacity && !stroke.opacity) continue;
 
-  /* Create VML elements as needed. */
-  if (this.visible) {
-    if (!vml) {
-      vml = this.$dom = {root: this.insert("v:rect")};
-      vml.root.appendChild(vml.fill = this.create("v:fill"));
-      vml.root.appendChild(vml.stroke = this.create("v:stroke"));
-    }
-    vml.root.style.display = "";
-  } else {
-    if (vml) vml.root.style.display = "none";
-    return;
+    e = this.expect("v:rect", e);
+    var vml = {root: e};
+    vml.root.appendChild(vml.fill = this.create("v:fill"));
+    vml.root.appendChild(vml.stroke = this.create("v:stroke"));
+
+    vml.root.style.left = s.left;
+    vml.root.style.top = s.top;
+    vml.root.style.width = s.width;
+    vml.root.style.height = s.height;
+    vml.root.style.cursor = s.cursor;
+    vml.root.title = s.title || "";
+
+    vml.fill.color = fill.color;
+    vml.fill.opacity = fill.opacity;
+
+    vml.stroke.color = stroke.color;
+    vml.stroke.opacity = stroke.opacity * Math.min(s.lineWidth, 1);
+    vml.stroke.weight = s.lineWidth + "px";
+
+    e = this.append(e, scenes, i);
   }
-
-  vml.root.style.left = this.left;
-  vml.root.style.top = this.top;
-  vml.root.style.width = this.width;
-  vml.root.style.height = this.height;
-  vml.root.style.cursor = this.cursor;
-  vml.root.title = this.title || "";
-
-  var fill = pv.color(this.fillStyle);
-  vml.fill.color = fill.color;
-  vml.fill.opacity = fill.opacity;
-  var stroke = pv.color(this.strokeStyle);
-  vml.stroke.color = stroke.color;
-  vml.stroke.opacity = stroke.opacity * Math.min(this.lineWidth, 1);
-  vml.stroke.weight = this.lineWidth + "px";
-
-  /* events */
-  this.listen(vml.root);
+  return e;
 };

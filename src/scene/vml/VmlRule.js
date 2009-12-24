@@ -1,30 +1,29 @@
-pv.VmlRule = function() {};
-pv.VmlRule.prototype = pv.extend(pv.VmlSprite);
+pv.VmlScene.rule = function(scenes) {
+  var e = scenes.$g.firstChild;
+  for (var i = 0; i < scenes.length; i++) {
+    var s = scenes[i];
 
-pv.VmlRule.prototype.update = function() {
-  var vml = this.$dom;
+    /* visible */
+    if (!s.visible) continue;
+    var stroke = pv.color(s.strokeStyle);
+    if (!stroke.opacity) continue;
 
-  /* Create VML elements as needed. */
-  if (this.visible) {
-    if (!vml) vml = this.$dom = {root: this.insert("v:line")};
+    e = this.expect("v:line", e);
+    var vml = {root: e};
     vml.root.appendChild(vml.stroke = this.create("v:stroke"));
-    vml.root.style.display = "";
-  } else {
-    if (vml) vml.root.style.display = "none";
-    return;
+
+    /* line */
+    vml.root.title = s.title;
+    vml.root.style.cursor = s.cursor;
+    vml.root.from = s.left + "," + s.top;
+    vml.root.to = (s.left + s.width) + "," + (s.top + s.height);
+
+    var color = pv.color(s.strokeStyle);
+    vml.stroke.color = color.color;
+    vml.stroke.opacity = color.opacity * Math.min(s.lineWidth, 1);
+    vml.stroke.weight = s.lineWidth + "px";
+
+    e = this.append(e, scenes, i);
   }
-
-  /* line */
-  vml.root.title = this.title;
-  vml.root.style.cursor = this.cursor;
-  vml.root.from = this.left + "," + this.top;
-  vml.root.to = (this.left + this.width) + "," + (this.top + this.height);
-
-  var color = pv.color(this.strokeStyle);
-  vml.stroke.color = color.color;
-  vml.stroke.opacity = color.opacity * Math.min(this.lineWidth, 1);
-  vml.stroke.weight = this.lineWidth + "px";
-
-  /* events */
-  this.listen(vml.root);
+  return e;
 };
