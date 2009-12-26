@@ -1,5 +1,4 @@
 /* TODO font-size detection for baseline adjustment */
-/* TODO textMargin support */
 
 pv.VmlScene.label = function(scenes) {
   var e = scenes.$g.firstChild;
@@ -45,10 +44,13 @@ pv.VmlScene.label = function(scenes) {
     vml.fill.opacity = fill.opacity;
 
     var x = Math.round(Math.cos(s.textAngle) * 1000),
-      y = Math.round(Math.sin(s.textAngle) * 1000), p;
+        y = Math.round(Math.sin(s.textAngle) * 1000),
+       mx = Math.round(Math.cos(s.textAngle) * s.textMargin),
+       my = Math.round(Math.sin(s.textAngle) * s.textMargin),
+       p;
     switch (s.textAlign) {
       case "right": {
-        p = "M" + -x + "," + -y + "L0,0";
+        p = "M" + -x + "," + -y + "L" + -mx + "," + -my;
         break;
       }
       case "center": {
@@ -56,7 +58,7 @@ pv.VmlScene.label = function(scenes) {
         break;
       }
       default: {
-        p = "M0,0L" + x + "," + y;
+        p = "M" + mx + "," + my + "L" + x + "," + y;
         break;
       }
     }
