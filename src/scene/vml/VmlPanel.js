@@ -22,6 +22,7 @@ pv.VmlScene.panel = function(scenes) {
       scenes.$g = g;
       var width = s.width + s.left + s.right;
       var height = s.height + s.top + s.bottom;
+      g.style.position = "relative";
       g.style.width = width;
       g.style.height = height;
       g.coordsize = width + "," + height;
@@ -34,6 +35,7 @@ pv.VmlScene.panel = function(scenes) {
     /* children */
     for (var j = 0; j < s.children.length; j++) {
       s.children[j].$g = e = this.expect("v:group", e);
+      e.style.position = "absolute";
       e.style.width = s.width;
       e.style.height = s.height;
       e.style.left = s.left;
