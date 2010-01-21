@@ -30,7 +30,6 @@ pv.VmlScene.create = function(type) {
  */
 pv.VmlScene.expect = function(type, e) {
   if (!e) return this.create(type);
-//  if (e.tagName == "a") e = e.firstChild;
   if (e.tagName == type) return e;
   var n = this.create(type);
   e.parentNode.replaceChild(n, e);
@@ -39,9 +38,18 @@ pv.VmlScene.expect = function(type, e) {
 
 /** TODO */
 pv.VmlScene.append = function(e, scenes, index) {
-//  e.$scene = {scenes:scenes, index:index};
-//  e = this.title(e, scenes[index]);
+  e.$scene = {scenes:scenes, index:index};
   if (!e.parentNode || e.parentNode.nodeType == 11)
     scenes.$g.appendChild(e);
   return e.nextSibling;
+};
+
+/** TODO */
+pv.VmlScene.dispatch = function() {
+  var e = window.event;
+  var t = e.srcElement.$scene;
+  if (t) {
+    t.scenes.mark.dispatch(e.type, t.scenes, t.index);
+    e.returnValue = false;
+  }
 };

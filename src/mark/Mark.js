@@ -937,7 +937,17 @@ var property;
 
 /** @private The current mouse location. */
 var pageX = 0, pageY = 0;
-pv.listen(window, "mousemove", function(e) { pageX = e.pageX; pageY = e.pageY; });
+pv.listen(document, "mousemove", function(e) {
+  e = e || window.event;
+  pageX = e.pageX; pageY = e.pageY;
+
+  // Calculate pageX/Y if missing and clientX/Y available
+  if ( pageX == undefined && e.clientX != undefined ) {
+    var doc = document.documentElement, body = document.body;
+    pageX = e.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+    pageY = e.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0) - (doc && doc.clientTop  || body && body.clientTop  || 0);
+  }
+});
 
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's

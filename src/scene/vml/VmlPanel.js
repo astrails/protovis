@@ -18,6 +18,13 @@ pv.VmlScene.panel = function(scenes) {
       g = s.canvas.firstChild;
       if (!g) {
         s.canvas.appendChild(g = this.create("v:group"));
+        g.onclick
+            = g.onmousedown
+            = g.onmouseup
+            = g.onmousemove
+            = g.onmouseout
+            = g.onmouseover
+            = pv.VmlScene.dispatch;
       }
       scenes.$g = g;
       var width = s.width + s.left + s.right;
