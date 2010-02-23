@@ -8,7 +8,8 @@ pv.VmlScene.line = function(scenes) {
 
   /* visible */
   if (!s.visible) return e;
-  var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+  var fill = s.fillStyle || pv.Color.none,
+      stroke = s.strokeStyle || pv.Color.none;
   if (!fill.opacity && !stroke.opacity) return e;
 
   /* points */

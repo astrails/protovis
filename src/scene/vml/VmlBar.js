@@ -5,7 +5,8 @@ pv.VmlScene.bar = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var fill = pv.color(s.fillStyle), stroke = pv.color(s.strokeStyle);
+    var fill = s.fillStyle || pv.Color.none,
+        stroke = s.strokeStyle || pv.Color.none;
     if (!fill.opacity && !stroke.opacity) continue;
 
     e = this.expect("v:rect", e);

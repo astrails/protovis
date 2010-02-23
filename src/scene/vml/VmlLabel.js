@@ -7,7 +7,7 @@ pv.VmlScene.label = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var fill = pv.color(s.textStyle);
+    var fill = s.textStyle || pv.Color.none;
     if (!fill.opacity) continue;
 
     /* Create VML elements as needed. */

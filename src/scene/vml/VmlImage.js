@@ -21,10 +21,10 @@ pv.VmlScene.image = function(scenes) {
     vml.root.src = s.url;
     vml.root.title = s.title || "";
 
-    var fill = pv.color(s.fillStyle);
+    var fill = s.fillStyle || pv.Color.none;
     vml.fill.color = fill.color;
     vml.fill.opacity = fill.opacity;
-    var stroke = pv.color(s.strokeStyle);
+    var stroke = s.strokeStyle || pv.Color.none;
     vml.stroke.color = stroke.color;
     vml.stroke.opacity = stroke.opacity * Math.min(s.lineWidth, 1);
     vml.stroke.weight = s.lineWidth + "px";
