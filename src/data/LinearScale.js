@@ -213,18 +213,23 @@ pv.Scale.linear = function() {
 
   /**
    * Returns an array of evenly-spaced, suitably-rounded values in the input
-   * domain. This method attempts to return between 5 and 10 tick values. These
-   * values are frequently used in conjunction with {@link pv.Rule} to display
-   * tick marks or grid lines.
+   * domain. This method attempts to return between <tt>n</tt> and <tt>m</tt>
+   * tick values. These values are frequently used in conjunction with
+   * {@link pv.Rule} to display tick marks or grid lines.
    *
    * @function
    * @name pv.Scale.linear.prototype.ticks
    * @returns {number[]} an array input domain values to use as ticks.
+   * @param {number} [n] the optional minimum number of tick values. Default 5.
+   * @param {number} [m] the optional maximum number of tick values. Default 10.
    */
-  scale.ticks = function() {
+  scale.ticks = function(n, m) {
+    if (d.length == 0) return [];
     var min = d[0],
         max = d[d.length - 1],
         span = max - min;
+
+    if (span == 0) return [min];
 
     /* Special case: dates. */
     if (type == newDate) {
@@ -329,9 +334,10 @@ pv.Scale.linear = function() {
     }
 
     /* Normal case: numbers. */
-    var step = pv.logCeil(span / 15, 10);
-    if (span / step < 2) step /= 5;
-    else if (span / step < 5) step /= 2;
+    if (!n) n = 5;
+    if (!m) m = 10;
+    var step = pv.logCeil(span / m, 10);
+    while (span / step < n) step /= 2;
     var start = Math.ceil(min / step) * step,
         end = Math.floor(max / step) * step,
         precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
@@ -365,9 +371,12 @@ pv.Scale.linear = function() {
    * @returns {pv.Scale.linear} <tt>this</tt>.
    */
   scale.nice = function() {
+    if (d.length == 0) return this;
     var min = d[0],
         max = d[d.length - 1],
-        step = Math.pow(10, Math.round(Math.log(max - min) / Math.log(10)) - 1);
+        span = max - min;
+    if (span == 0) return this;
+    var step = Math.pow(10, Math.round(Math.log(span) / Math.log(10)) - 1);
     d = [Math.floor(min / step) * step, Math.ceil(max / step) * step];
     return this;
   };
