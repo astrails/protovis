@@ -400,10 +400,6 @@ pv.Mark.prototype.defaults = new pv.Mark()
     .reverse(false)
     .antialias(true);
 
-/* Private categorical colors for default fill & stroke styles. */
-var defaultFillStyle = pv.Colors.category20().by(pv.parent),
-    defaultStrokeStyle = pv.Colors.category10().by(pv.parent);
-
 /**
  * Sets the prototype of this mark to the specified mark. Any properties not
  * defined on this mark may be inherited from the specified prototype mark, or
@@ -716,9 +712,9 @@ pv.Mark.prototype.bind = function() {
   /* Setup binds to evaluate constants before functions. */
   this.binds = {
     data: data,
-    visible: visible,
     defs: defs,
-    properties: pv.blend(types)
+    required: [visible],
+    optional: pv.blend(types)
   };
 };
 
@@ -810,20 +806,7 @@ pv.Mark.prototype.build = function() {
     var s = scene[i];
     if (!s) scene[i] = s = {};
     s.data = stack[0] = data[i];
-
-    /* Evaluate special visible property. */
-    var visible = this.binds.visible;
-    switch (visible.type) {
-      case 0: case 1: visible = defs.values.visible; break;
-      case 2: visible = visible.value; break;
-      case 3: {
-        property = "visible";
-        visible = visible.value.apply(this, stack);
-        break;
-      }
-    }
-
-    if (s.visible = visible) this.buildInstance(s);
+    this.buildInstance(s);
   }
   stack.shift();
   delete this.index;
@@ -842,7 +825,7 @@ pv.Mark.prototype.build = function() {
  */
 pv.Mark.prototype.buildProperties = function(s, properties) {
   for (var i = 0, n = properties.length; i < n; i++) {
-    var p = properties[i], v = p.value;
+    var p = properties[i], v = p.value; // assume case 2 (constant)
     switch (p.type) {
       case 0: case 1: v = this.scene.defs.values[p.name]; break;
       case 3: {
@@ -870,8 +853,11 @@ pv.Mark.prototype.buildProperties = function(s, properties) {
  * @param s a node in the scene graph; the instance of the mark to build.
  */
 pv.Mark.prototype.buildInstance = function(s) {
-  this.buildProperties(s, this.binds.properties);
-  this.buildImplied(s);
+  this.buildProperties(s, this.binds.required);
+  if (s.visible) {
+    this.buildProperties(s, this.binds.optional);
+    this.buildImplied(s);
+  }
 };
 
 /**
@@ -935,20 +921,6 @@ pv.Mark.prototype.buildImplied = function(s) {
  */
 var property;
 
-/** @private The current mouse location. */
-var pageX = 0, pageY = 0;
-pv.listen(document, "mousemove", function(e) {
-  e = e || window.event;
-  pageX = e.pageX; pageY = e.pageY;
-
-  // Calculate pageX/Y if missing and clientX/Y available
-  if ( pageX == undefined && e.clientX != undefined ) {
-    var doc = document.documentElement, body = document.body;
-    pageX = e.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
-    pageY = e.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0) - (doc && doc.clientTop  || body && body.clientTop  || 0);
-  }
-});
-
 /**
  * Returns the current location of the mouse (cursor) relative to this mark's
  * parent. The <i>x</i> coordinate corresponds to the left margin, while the
@@ -967,7 +939,7 @@ pv.Mark.prototype.mouse = function() {
     x += node.offsetLeft;
     y += node.offsetTop;
   } while (node = node.offsetParent);
-  return pv.vector(pageX - x, pageY - y);
+  return pv.vector(pv.event.pageX - x, pv.event.pageY - y);
 };
 
 /**
@@ -1025,11 +997,10 @@ pv.Mark.prototype.event = function(type, handler) {
 };
 
 /** @private TODO */
-pv.Mark.prototype.dispatch = function(type, scenes, index) {
-  var l = this.$handlers && this.$handlers[type];
+pv.Mark.prototype.dispatch = function(e, scenes, index) {
+  var l = this.$handlers && this.$handlers[e.type];
   if (!l) return this.parent
-      ? this.parent.dispatch(type, scenes.parent, scenes.parentIndex)
-      : false;
+      && this.parent.dispatch(e, scenes.parent, scenes.parentIndex);
 
   try {
     /* Setup the scene stack. */
@@ -1045,6 +1016,7 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
     try {
       mark = l.apply(this, this.root.scene.data = argv(this));
     } finally {
+      e.preventDefault();
       this.root.scene.data = null;
     }
 
@@ -1058,6 +1030,4 @@ pv.Mark.prototype.dispatch = function(type, scenes, index) {
       delete mark.index;
     } while (mark = mark.parent);
   }
-
-  return true;
 };

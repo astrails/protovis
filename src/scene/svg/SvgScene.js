@@ -120,12 +120,10 @@ pv.SvgScene.title = function(e, s) {
 };
 
 /** TODO */
-pv.SvgScene.dispatch = function(e) {
+pv.SvgScene.dispatch = pv.listener(function(e) {
   var t = e.target.$scene;
-  if (t && t.scenes.mark.dispatch(e.type, t.scenes, t.index)) {
-    e.preventDefault();
-  }
-};
+  if (t) t.scenes.mark.dispatch(e, t.scenes, t.index);
+});
 
 /** @private */
 pv.SvgScene.implicit = {
