@@ -79,7 +79,7 @@ pv.SvgScene.expect = function(e, type, attributes, style) {
     var value = style[name];
     if (value == pv.SvgScene.implicit.css[name]) value = null;
     if (value == null) e.style.removeProperty(name);
-    else e.style.setProperty(name, value);
+    else e.style.setProperty(name, value, null);
   }
   return e;
 };
