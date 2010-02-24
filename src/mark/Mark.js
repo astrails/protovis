@@ -939,7 +939,18 @@ pv.Mark.prototype.mouse = function() {
     x += node.offsetLeft;
     y += node.offsetTop;
   } while (node = node.offsetParent);
-  return pv.vector(pv.event.pageX - x, pv.event.pageY - y);
+
+  var pageX = pv.event.pageX,
+      pageY = pv.event.pageY;
+
+  // Calculate pageX/Y if missing and clientX/Y available
+  if ( pageX == undefined && pv.event.clientX != undefined ) {
+    var doc = document.documentElement, body = document.body;
+    pageX = pv.event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+    pageY = pv.event.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0) - (doc && doc.clientTop  || body && body.clientTop  || 0);
+  }
+
+  return pv.vector(pageX - x, pageY - y);
 };
 
 /**

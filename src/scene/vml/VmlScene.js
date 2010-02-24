@@ -45,11 +45,10 @@ pv.VmlScene.append = function(e, scenes, index) {
 };
 
 /** TODO */
-pv.VmlScene.dispatch = function() {
-  var e = window.event;
+pv.VmlScene.dispatch = pv.listener(function(e) {
   var t = e.srcElement.$scene;
   if (t) {
-    t.scenes.mark.dispatch(e.type, t.scenes, t.index);
-    e.returnValue = false;
+    e.preventDefault = function () { this.returnValue = false; };
+    t.scenes.mark.dispatch(e, t.scenes, t.index);
   }
-};
+});

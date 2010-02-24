@@ -120,8 +120,8 @@ pv.listen = function(target, type, listener) {
 pv.listener = function(listener) {
   return function(e) {
       try {
-        pv.event = e;
-        return listener(e);
+        pv.event = e || window.event;
+        return listener(pv.event);
       } finally {
         delete pv.event;
       }
