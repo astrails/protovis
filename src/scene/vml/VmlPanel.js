@@ -71,6 +71,8 @@ pv.VmlScene.fill = function(e, scenes, i) {
     var c = e.appendChild(this.create("v:fill"));
     c.color = fill.color;
     c.opacity = fill.opacity;
+    c = e.appendChild(this.create("v:stroke"));
+    c.opacity = 0;
     e = this.append(e, scenes, i);
   }
   return e;
