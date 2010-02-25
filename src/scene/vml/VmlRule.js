@@ -17,7 +17,7 @@ pv.VmlScene.rule = function(scenes) {
     vml.root.style.cursor = s.cursor;
     vml.root.style.antialias = s.antialias;
     vml.root.from = s.left + "," + s.top;
-    vml.root.to = (s.left + s.width) + "," + (s.top + s.height);
+    vml.root.to = (s.left + s.width - (s.width == 0 ? 0 : 1)) + "," + (s.top + s.height - (s.height == 0 ? 0 : 1));
 
     var color = pv.color(s.strokeStyle);
     vml.stroke.color = color.color;
