@@ -30,6 +30,7 @@ pv.VmlScene.area = function(scenes) {
 
   /* polygon */
   vml.root.style.cursor = s.cursor;
+  vml.root.style.antialias = s.antialias;
   vml.root.title = s.title || "";
   vml.root.points = p;
 

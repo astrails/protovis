@@ -19,6 +19,7 @@ pv.VmlScene.bar = function(scenes) {
     vml.root.style.width = s.width;
     vml.root.style.height = s.height;
     vml.root.style.cursor = s.cursor;
+    vml.root.style.antialias = s.antialias;
     vml.root.title = s.title || "";
 
     vml.fill.color = fill.color;

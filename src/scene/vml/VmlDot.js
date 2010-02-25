@@ -92,6 +92,7 @@ pv.VmlScene.dot = function(scenes) {
     vml.shape.style.width = parent.width;
     vml.shape.style.height = parent.height;
     vml.shape.style.cursor = s.cursor;
+    vml.shape.style.antialias = s.antialias;
     vml.shape.title = s.title || "";
 
     /* path */

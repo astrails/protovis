@@ -66,6 +66,7 @@ pv.VmlScene.label = function(scenes) {
 
     vml.text.style.font = s.font;
     vml.text.style.color = "black";
+    vml.text.style.antialias = s.antialias;
     vml.text.style["alignment-baseline"] = "alphabetic";
     vml.text.style["v-text-align"] = s.textAlign;
     vml.text.string = s.text;

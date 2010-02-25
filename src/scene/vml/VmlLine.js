@@ -32,6 +32,7 @@ pv.VmlScene.line = function(scenes) {
   vml.root.style.width = "100%";
   vml.root.style.height = "100%";
   vml.root.style.cursor = s.cursor;
+  vml.root.style.antialias = s.antialias;
   vml.root.title = s.title || "";
   vml.path.v = p;
 
