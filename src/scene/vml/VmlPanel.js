@@ -38,12 +38,11 @@ pv.VmlScene.panel = function(scenes) {
     }
 
     // v:group doesn't get the full width and height unless it has
-    // an inner shape with full width and height. However, it needs
-    // to be corrected by 3 pixels!
+    // an inner shape with full width and height.
     e = this.expect("v:rect", e);
     e.style.position = "absolute";
-    e.style.width = width - 3;
-    e.style.height = height - 3;
+    e.style.width = width;
+    e.style.height = height;
     var c = e.appendChild(this.create("v:fill"));
     c.opacity = 0;
     c = e.appendChild(this.create("v:stroke"));
