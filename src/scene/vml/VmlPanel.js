@@ -18,6 +18,10 @@ pv.VmlScene.panel = function(scenes) {
     /* vml */
     if (!scenes.parent) {
       s.canvas.style.position = "relative";
+      s.canvas.style.display = "inline-block";
+      s.canvas.style.width = width;
+      s.canvas.style.height = height;
+      s.canvas.style.overflow = "hidden";
       g = s.canvas.firstChild;
       if (!g) {
         s.canvas.appendChild(g = this.create("v:group"));
@@ -34,6 +38,9 @@ pv.VmlScene.panel = function(scenes) {
       g.style.width = width;
       g.style.height = height;
       g.coordsize = width + "," + height;
+      // Adjust for 1 pixel VML margin that I can find no other way of removing.
+      g.style.top = "-1px";
+      g.style.left = "-1px";
       if (typeof e == "undefined") e = g.firstChild;
     }
 
