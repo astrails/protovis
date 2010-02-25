@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Margins</title>
+    <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <style type="text/css">
+body { margin: 1em; background-color: gray; }
+span { background-color: white; }
+	</style>
+  </head>
+  <body>
+    <script type="text/javascript+protovis">
+
+var vis = new pv.Panel()
+    .width(200)
+    .height(200)
+    .bottom(10)
+    .left(20)
+    .right(30)
+    .top(40)
+    .fillStyle("green")
+    .antialias(false);
+
+vis.add(pv.Bar)
+    .top(-40)
+    .bottom(-10)
+    .left(-20)
+    .right(-30)
+    .fillStyle("rgba(200,200,255,.5)")
+    .antialias(false);
+
+vis.add(pv.Rule)
+    .data(pv.range(-20,250,2))
+    .top(0)
+    .left(function(d) d)
+    .height(function(d) d % 10 == 0 ? 6 : 2)
+    .strokeStyle("black")
+    .antialias(false)
+.anchor("bottom").add(pv.Label)
+    .visible(function(d) d % 50 == 0);
+
+vis.add(pv.Rule)
+    .top(100)
+    .left(-20)
+    .width(20)
+    .strokeStyle("rgba(255,0,0,1)")
+    .antialias(false);
+
+vis.add(pv.Rule)
+    .top(-40)
+    .left(100)
+    .height(40)
+    .strokeStyle("rgba(255,0,0,1)")
+    .antialias(false);
+
+vis.add(pv.Rule)
+    .top(100)
+    .right(-30)
+    .width(30)
+    .strokeStyle("rgba(255,0,0,1)")
+    .antialias(false);
+
+vis.add(pv.Rule)
+    .bottom(-10)
+    .left(100)
+    .height(10)
+    .strokeStyle("rgba(255,0,0,1)")
+    .antialias(false);
+
+vis.render();
+
+    </script>
+  </body>
+</html>
