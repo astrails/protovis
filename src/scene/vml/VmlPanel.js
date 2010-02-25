@@ -12,6 +12,9 @@ pv.VmlScene.panel = function(scenes) {
     /* visible */
     if (!s.visible) continue;
 
+    var width = s.width + s.left + s.right;
+    var height = s.height + s.top + s.bottom;
+
     /* vml */
     if (!scenes.parent) {
       s.canvas.style.position = "relative";
@@ -27,14 +30,26 @@ pv.VmlScene.panel = function(scenes) {
             = pv.VmlScene.dispatch;
       }
       scenes.$g = g;
-      var width = s.width + s.left + s.right;
-      var height = s.height + s.top + s.bottom;
       g.style.position = "relative";
       g.style.width = width;
       g.style.height = height;
       g.coordsize = width + "," + height;
       if (typeof e == "undefined") e = g.firstChild;
     }
+
+    // v:group doesn't get the full width and height unless it has
+    // an inner shape with full width and height. However, it needs
+    // to be corrected by 3 pixels!
+    e = this.expect("v:rect", e);
+    e.style.position = "absolute";
+    e.style.width = width - 3;
+    e.style.height = height - 3;
+    var c = e.appendChild(this.create("v:fill"));
+    c.opacity = 0;
+    c = e.appendChild(this.create("v:stroke"));
+    c.opacity = 0;
+    c.weight = "0px";
+    e = this.append(e, scenes, i);
 
     /* fill */
     e = this.fill(e, scenes, i);
@@ -63,6 +78,7 @@ pv.VmlScene.fill = function(e, scenes, i) {
   var s = scenes[i], fill = s.fillStyle || pv.Color.none;
   if (fill.opacity) {
     e = this.expect("v:rect", e);
+    e.style.position = "absolute";
     e.style.left = s.left;
     e.style.top = s.top;
     e.style.width = s.width;
@@ -82,6 +98,7 @@ pv.VmlScene.stroke = function(e, scenes, i) {
   var s = scenes[i], stroke = s.strokeStyle || pv.Color.none;
   if (stroke.opacity) {
     e = this.expect("v:rect", e);
+    e.style.position = "absolute";
     e.style.left = s.left;
     e.style.top = s.top;
     e.style.width = s.width;
