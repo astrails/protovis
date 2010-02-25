@@ -43,11 +43,8 @@ pv.VmlScene.panel = function(scenes) {
     e.style.position = "absolute";
     e.style.width = width;
     e.style.height = height;
-    var c = e.appendChild(this.create("v:fill"));
-    c.opacity = 0;
-    c = e.appendChild(this.create("v:stroke"));
-    c.opacity = 0;
-    c.weight = "0px";
+    e.stroked = false;
+    e.filled = false;
     e = this.append(e, scenes, i);
 
     /* fill */
@@ -84,11 +81,10 @@ pv.VmlScene.fill = function(e, scenes, i) {
     e.style.height = s.height;
     e.style.cursor = s.cursor;
     e.style.antialias = s.antialias;
+    e.stroked = false;
     var c = e.appendChild(this.create("v:fill"));
     c.color = fill.color;
     c.opacity = fill.opacity;
-    c = e.appendChild(this.create("v:stroke"));
-    c.opacity = 0;
     e = this.append(e, scenes, i);
   }
   return e;
@@ -105,8 +101,7 @@ pv.VmlScene.stroke = function(e, scenes, i) {
     e.style.height = s.height;
     e.style.cursor = s.cursor;
     e.style.antialias = s.antialias;
-    var f = e.appendChild(this.create("v:fill"));
-    f.opacity = 0;
+    e.filled = false;
     var c = e.appendChild(this.create("v:stroke"));
     c.color = stroke.color;
     c.opacity = stroke.opacity * Math.min(s.lineWidth, 1);
