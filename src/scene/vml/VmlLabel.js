@@ -8,7 +8,7 @@ pv.VmlScene.label = function(scenes) {
     /* visible */
     if (!s.visible) continue;
     var fill = s.textStyle || pv.Color.none;
-    if (!fill.opacity) continue;
+    if (!fill.opacity || !s.text) continue;
 
     /* Create VML elements as needed. */
     e = this.expect("v:shape", e);
