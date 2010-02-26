@@ -57,10 +57,10 @@ pv.VmlScene.dot = function(scenes) {
 
     e = this.expect("v:group", e);
     var vml = {root: e};
-    vml.root.appendChild(vml.shape = this.create("v:shape"));
-    vml.shape.appendChild(vml.path = this.create("v:path"));
-    vml.shape.appendChild(vml.fill = this.create("v:fill"));
-    vml.shape.appendChild(vml.stroke = this.create("v:stroke"));
+    vml.shape = this.expect("v:shape", vml.root.firstChild, vml.root);
+    vml.path = this.expect("v:path", vml.shape.firstChild, vml.shape);
+    vml.fill = this.expect("v:fill", vml.path.nextSibling, vml.shape);
+    vml.stroke = this.expect("v:stroke", vml.fill.nextSibling, vml.shape);
 
     var parent = scenes.parent[scenes.parentIndex];
 

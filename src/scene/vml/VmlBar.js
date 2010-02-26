@@ -11,8 +11,8 @@ pv.VmlScene.bar = function(scenes) {
 
     e = this.expect("v:rect", e);
     var vml = {root: e};
-    vml.root.appendChild(vml.fill = this.create("v:fill"));
-    vml.root.appendChild(vml.stroke = this.create("v:stroke"));
+    vml.fill = this.expect("v:fill", vml.root.firstChild, vml.root);
+    vml.stroke = this.expect("v:stroke", vml.fill.nextSibling, vml.root);
 
     vml.root.style.left = s.left;
     vml.root.style.top = s.top;

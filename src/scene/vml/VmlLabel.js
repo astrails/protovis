@@ -13,9 +13,9 @@ pv.VmlScene.label = function(scenes) {
     /* Create VML elements as needed. */
     e = this.expect("v:shape", e);
     var vml = {root: e};
-    vml.root.appendChild(vml.path = this.create("v:path"));
-    vml.root.appendChild(vml.fill = this.create("v:fill"));
-    vml.root.appendChild(vml.text = this.create("v:textpath"));
+    vml.path = this.expect("v:path", vml.root.firstChild, vml.root);
+    vml.fill = this.expect("v:fill", vml.path.nextSibling, vml.root);
+    vml.text = this.expect("v:textpath", vml.fill.nextSibling, vml.root);
     vml.root.filled = true;
     vml.root.stroked = false;
     vml.root.style.width = "100%";

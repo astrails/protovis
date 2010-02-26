@@ -8,8 +8,8 @@ pv.VmlScene.image = function(scenes) {
 
     e = this.expect("v:image", e);
     var vml = {root: e};
-    vml.root.appendChild(vml.fill = this.create("v:fill"));
-    vml.root.appendChild(vml.stroke = this.create("v:stroke"));
+    vml.fill = this.expect("v:fill", vml.root.firstChild, vml.root);
+    vml.stroke = this.expect("v:stroke", vml.fill.nextSibling, vml.root);
     vml.root.filled = true;
     vml.root.stroked = true;
 

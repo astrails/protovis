@@ -10,7 +10,7 @@ pv.VmlScene.rule = function(scenes) {
 
     e = this.expect("v:line", e);
     var vml = {root: e};
-    vml.root.appendChild(vml.stroke = this.create("v:stroke"));
+    vml.stroke = this.expect("v:stroke", vml.root.firstChild, vml.root);
 
     /* line */
     vml.root.title = s.title;

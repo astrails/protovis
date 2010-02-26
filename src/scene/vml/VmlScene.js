@@ -15,9 +15,12 @@ pv.VmlScene.init = function() {
 /**
  *
  */
-pv.VmlScene.create = function(type) {
+pv.VmlScene.create = function(type, parent) {
   this.init();
-  return document.createElement(type);
+  var e = document.createElement(type);
+  if (parent)
+    parent.appendChild(e);
+  return e;
 };
 
 /**
@@ -28,9 +31,9 @@ pv.VmlScene.create = function(type) {
  * @param type {string} a VML element type, such as "v:group".
  * @return a new VML element.
  */
-pv.VmlScene.expect = function(type, e) {
-  if (!e) return this.create(type);
-  if (e.tagName == type) return e;
+pv.VmlScene.expect = function(type, e, parent) {
+  if (!e) return this.create(type, parent);
+  if ("v:" + e.tagName == type) return e;
   var n = this.create(type);
   e.parentNode.replaceChild(n, e);
   return n;
