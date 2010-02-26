@@ -32,6 +32,11 @@ pv.VmlScene.area = function(scenes) {
   vml.root.style.cursor = s.cursor;
   vml.root.style.antialias = s.antialias;
   vml.root.title = s.title || "";
+  // Changing the 'points' attribute produces the error "Object doesn't
+  // support this property or method" when the node is in the DOM. Remove
+  // it; we'll add it back at the end.
+  if (vml.root.parentNode)
+    vml.root.parentNode.removeChild(vml.root);
   vml.root.points = p;
 
   vml.fill.color = fill.color;
