@@ -7,7 +7,10 @@ pv.VmlScene = {};
  *
  */
 pv.VmlScene.init = function() {
-  document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML);display:inline-block");
+  ["group", "shape", "path", "fill", "stroke",
+    "polyline", "rect", "image", "textpath", "line"].forEach(function(e) {
+    document.createStyleSheet().addRule("v\\:" + e, "behavior:url(#default#VML);display:inline-block");
+  });
   document.namespaces.add("v", "urn:schemas-microsoft-com:vml");
   this.init = function() {};
 };
