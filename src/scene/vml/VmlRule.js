@@ -5,7 +5,7 @@ pv.VmlScene.rule = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var stroke = s.strokeStyle || pv.Color.none;
+    var stroke = s.strokeStyle;
     if (!stroke.opacity) continue;
 
     e = this.expect("v:line", e);

@@ -78,7 +78,7 @@ pv.VmlScene.panel = function(scenes) {
 };
 
 pv.VmlScene.fill = function(e, scenes, i) {
-  var s = scenes[i], fill = s.fillStyle || pv.Color.none;
+  var s = scenes[i], fill = s.fillStyle;
   if (fill.opacity) {
     e = this.expect("v:rect", e);
     e.style.position = "absolute";
@@ -98,7 +98,7 @@ pv.VmlScene.fill = function(e, scenes, i) {
 };
 
 pv.VmlScene.stroke = function(e, scenes, i) {
-  var s = scenes[i], stroke = s.strokeStyle || pv.Color.none;
+  var s = scenes[i], stroke = s.strokeStyle;
   if (stroke.opacity) {
     e = this.expect("v:rect", e);
     e.style.position = "absolute";
