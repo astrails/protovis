@@ -7,8 +7,15 @@ pv.Behavior.point = function(r) {
 
   /** @private Creates a fake mouse event of the specified type. */
   function event(type) {
-    var e = document.createEvent("MouseEvents");
-    e.initEvent(type, true, false);
+    var e;
+    if (document.createEvent) {
+      e = document.createEvent("MouseEvents");
+      e.initEvent(type, true, false);
+    } else {
+      e = document.createEventObject();
+      e.type = type;
+      e.preventDefault = function () { this.returnValue = false; };
+    }
     return e;
   }
 
