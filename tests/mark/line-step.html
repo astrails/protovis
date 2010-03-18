@@ -1,52 +1,39 @@
 <html>
   <head>
-    <title>Step Chart</title>
+    <title>Line Step</title>
     <script type="text/javascript" src="../../protovis-d3.2.js"></script>
+    <link rel="stylesheet" type="text/css" href="../style.css"/>
   </head>
   <body>
     <script type="text/javascript+protovis">
 
-var data = pv.range(0, 10, .1).map(function(x) {
-        return {x: x, y: Math.sin(x) + Math.random() * .5 + 2};
-      }),
-    w = 400,
-    h = 200,
-    x = pv.Scale.linear(data, function(d) d.x).range(0, w),
-    y = pv.Scale.linear(0, 4).range(0, h);
-
 var vis = new pv.Panel()
-    .width(w)
-    .height(h)
-    .bottom(20)
-    .left(20)
-    .right(10)
-    .top(5);
-
-vis.add(pv.Rule)
-    .data(y.ticks())
-    .visible(function() !(this.index % 2))
-    .bottom(function(d) Math.round(y(d)) - .5)
-    .strokeStyle("#eee")
-  .anchor("left").add(pv.Label)
-    .text(function(d) d.toFixed(1));
-
-vis.add(pv.Rule)
-    .data(x.ticks())
-    .visible(function(d) d > 0)
-    .left(function(d) Math.round(x(d)) - .5)
-    .strokeStyle("#eee")
-  .anchor("bottom").add(pv.Label)
-    .text(function(d) d.toFixed());
+    .width(500)
+    .height(270)
+    .left(5)
+    .right(5)
+    .bottom(5);
 
 vis.add(pv.Line)
-    .data(data)
-    .left(function(d) x(d.x))
-    .bottom(function(d) y(d.y))
-    .lineWidth(3)
-    .interpolate("step-after");
+    .data(function() pv.range(0, 6, .1).map(Math.sin))
+    .left(function() this.index / 59 * 500)
+    .bottom(function(d) (d + 1) / 2 * 250 + 10)
+    .strokeStyle("red")
+    .interpolate("step-before")
+  .add(pv.Line)
+    .strokeStyle("green")
+    .interpolate("step-after")
+  .add(pv.Line)
+    .strokeStyle("blue")
+    .interpolate("linear");
 
 vis.render();
 
     </script>
+
+<p>The red line uses "step-before"; the green line uses "step-after". The red
+line should precede the blue line, which uses "linear" interpolation, while the
+green line should follow the blue line.
+
   </body>
 </html>

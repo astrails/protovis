@@ -5,7 +5,7 @@ pv.SvgScene.label = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var fill = s.textStyle || pv.Color.none;
+    var fill = s.textStyle;
     if (!fill.opacity || !s.text) continue;
 
     /* text-baseline, text-align */
@@ -22,12 +22,14 @@ pv.SvgScene.label = function(scenes) {
     }
 
     e = this.expect(e, "text", {
-        "pointer-events": "none",
+        "pointer-events": s.events,
+        "cursor": s.cursor,
         "x": x,
         "y": y,
         "dy": dy,
         "transform": "translate(" + s.left + "," + s.top + ")"
-            + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : ""),
+            + (s.textAngle ? " rotate(" + 180 * s.textAngle / Math.PI + ")" : "")
+            + (this.scale != 1 ? " scale(" + 1 / this.scale + ")" : ""),
         "fill": fill.color,
         "fill-opacity": fill.opacity || null,
         "text-anchor": anchor

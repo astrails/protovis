@@ -75,8 +75,6 @@ pv.Line.prototype.type = "line";
  * functions (i.e., step functions), either "step-before" or "step-after" can be
  * specified. To draw a clockwise circular arc between points, specify "polar".
  *
- * <p>Note: this property is currently supported only on non-segmented lines.
- *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type string
@@ -98,3 +96,48 @@ pv.Line.prototype.defaults = new pv.Line()
 /** @private Reuse Area's implementation for segmented bind & build. */
 pv.Line.prototype.bind = pv.Area.prototype.bind;
 pv.Line.prototype.buildInstance = pv.Area.prototype.buildInstance;
+
+/**
+ * Constructs a new line anchor with default properties. Lines support five
+ * different anchors:<ul>
+ *
+ * <li>top
+ * <li>left
+ * <li>center
+ * <li>bottom
+ * <li>right
+ *
+ * </ul>In addition to positioning properties (left, right, top bottom), the
+ * anchors support text rendering properties (text-align, text-baseline). Text is
+ * rendered to appear outside the line. Note that this behavior is different
+ * from other mark anchors, which default to rendering text <i>inside</i> the
+ * mark.
+ *
+ * <p>For consistency with the other mark types, the anchor positions are
+ * defined in terms of their opposite edge. For example, the top anchor defines
+ * the bottom property, such that a bar added to the top anchor grows upward.
+ *
+ * @param {string} name the anchor name; either a string or a property function.
+ * @returns {pv.Anchor}
+ */
+pv.Line.prototype.anchor = function(name) {
+  return pv.Mark.prototype.anchor.call(this, name)
+    .textAlign(function(d) {
+        switch (this.name()) {
+          case "left": return "right";
+          case "bottom":
+          case "top":
+          case "center": return "center";
+          case "right": return "left";
+        }
+      })
+    .textBaseline(function(d) {
+        switch (this.name()) {
+          case "right":
+          case "left":
+          case "center": return "middle";
+          case "top": return "bottom";
+          case "bottom": return "top";
+        }
+      });
+};

@@ -112,8 +112,6 @@ pv.Area.prototype.type = "area";
  * functions (i.e., step functions), either "step-before" or "step-after" can be
  * specified.
  *
- * <p>Note: this property is currently supported only on non-segmented areas.
- *
  * <p>This property is <i>fixed</i>. See {@link pv.Mark}.
  *
  * @type string
@@ -132,95 +130,7 @@ pv.Area.prototype.defaults = new pv.Area()
     .fillStyle(pv.Colors.category20().by(pv.parent))
     .interpolate("linear");
 
-/**
- * Constructs a new area anchor with default properties. Areas support five
- * different anchors:<ul>
- *
- * <li>top
- * <li>left
- * <li>center
- * <li>bottom
- * <li>right
- *
- * </ul>In addition to positioning properties (left, right, top bottom), the
- * anchors support text rendering properties (text-align, text-baseline). Text is
- * rendered to appear inside the area polygon.
- *
- * <p>To facilitate stacking of areas, the anchors are defined in terms of their
- * opposite edge. For example, the top anchor defines the bottom property, such
- * that the area grows upwards; the bottom anchor instead defines the top
- * property, such that the area grows downwards. Of course, in general it is
- * more robust to use panels and the cousin accessor to define stacked area
- * marks; see {@link pv.Mark#scene} for an example.
- *
- * @param {string} name the anchor name; either a string or a property function.
- * @returns {pv.Anchor}
- */
-pv.Area.prototype.anchor = function(name) {
-  var area = this;
-  return pv.Mark.prototype.anchor.call(this, name)
-    .left(function() {
-        switch (this.name()) {
-          case "bottom":
-          case "top":
-          case "center": return area.left() + area.width() / 2;
-          case "right": return area.left() + area.width();
-        }
-        return null;
-      })
-    .right(function() {
-        switch (this.name()) {
-          case "bottom":
-          case "top":
-          case "center": return area.right() + area.width() / 2;
-          case "left": return area.right() + area.width();
-        }
-        return null;
-      })
-    .top(function() {
-        switch (this.name()) {
-          case "left":
-          case "right":
-          case "center": return area.top() + area.height() / 2;
-          case "bottom": return area.top() + area.height();
-        }
-        return null;
-      })
-    .bottom(function() {
-        switch (this.name()) {
-          case "left":
-          case "right":
-          case "center": return area.bottom() + area.height() / 2;
-          case "top": return area.bottom() + area.height();
-        }
-        return null;
-      })
-    .textAlign(function() {
-        switch (this.name()) {
-          case "bottom":
-          case "top":
-          case "center": return "center";
-          case "right": return "right";
-        }
-        return "left";
-      })
-    .textBaseline(function() {
-        switch (this.name()) {
-          case "right":
-          case "left":
-          case "center": return "middle";
-          case "top": return "top";
-        }
-        return "bottom";
-      });
-};
-
-/**
- * @private Overrides the default behavior of {@link pv.Mark.buildImplied} such
- * that the width and height are set to zero if null.
- *
- * @param s a node in the scene graph; the instance of the mark to build.
- */
+/** @private Sets width and height to zero if null. */
 pv.Area.prototype.buildImplied = function(s) {
   if (s.height == null) s.height = 0;
   if (s.width == null) s.width = 0;

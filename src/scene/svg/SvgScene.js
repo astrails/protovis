@@ -1,41 +1,37 @@
-// TODO don't populate default attributes?
-
-/**
- * @private Namespace constants for SVG, XMLNS, and XLINK.
- *
- * @namespace Namespace constants for SVG, XMLNS, and XLINK.
- */
-var ns = {
-  /**
-   * The SVG namespace, "http://www.w3.org/2000/svg".
-   *
-   * @type string
-   * @constant
-   */
-  svg: "http://www.w3.org/2000/svg",
-
-  /**
-   * The XMLNS namespace, "http://www.w3.org/2000/xmlns".
-   *
-   * @type string
-   * @constant
-   */
-  xmlns: "http://www.w3.org/2000/xmlns",
-
-  /**
-   * The XLINK namespace, "http://www.w3.org/1999/xlink".
-   *
-   * @type string
-   * @constant
-   */
-  xlink: "http://www.w3.org/1999/xlink"
-};
-
 /**
  * @private
  * @namespace
  */
-pv.SvgScene = {};
+pv.SvgScene = {
+  /* Various namespaces. */
+  svg: "http://www.w3.org/2000/svg",
+  xmlns: "http://www.w3.org/2000/xmlns",
+  xlink: "http://www.w3.org/1999/xlink",
+
+  /** The pre-multipled scale, based on any enclosing transforms. */
+  scale: 1,
+
+  /** Implicit values for SVG and CSS properties. */
+  implicit: {
+    svg: {
+      "shape-rendering": "auto",
+      "pointer-events": "painted",
+      "x": 0,
+      "y": 0,
+      "dy": 0,
+      "text-anchor": "start",
+      "transform": "translate(0,0)",
+      "fill": "none",
+      "fill-opacity": 1,
+      "stroke": "none",
+      "stroke-opacity": 1,
+      "stroke-width": 1.5
+    },
+    css: {
+      "font": "10px sans-serif"
+    }
+  }
+};
 
 /**
  * Creates a new SVG element of the specified type.
@@ -44,7 +40,7 @@ pv.SvgScene = {};
  * @returns a new SVG element.
  */
 pv.SvgScene.create = function(type) {
-  return document.createElementNS(ns.svg, type);
+  return document.createElementNS(this.svg, type);
 };
 
 /**
@@ -71,15 +67,15 @@ pv.SvgScene.expect = function(e, type, attributes, style) {
   }
   for (var name in attributes) {
     var value = attributes[name];
-    if (value == pv.SvgScene.implicit.svg[name]) value = null;
+    if (value == this.implicit.svg[name]) value = null;
     if (value == null) e.removeAttribute(name);
     else e.setAttribute(name, value);
   }
   for (var name in style) {
     var value = style[name];
-    if (value == pv.SvgScene.implicit.css[name]) value = null;
+    if (value == this.implicit.css[name]) value = null;
     if (value == null) e.style.removeProperty(name);
-    else e.style.setProperty(name, value, null);
+    else e.style[name] = value;
   }
   return e;
 };
@@ -112,7 +108,7 @@ pv.SvgScene.title = function(e, s) {
       if (e.parentNode) e.parentNode.replaceChild(a, e);
       a.appendChild(e);
     }
-    a.setAttributeNS(ns.xlink, "title", s.title);
+    a.setAttributeNS(this.xlink, "title", s.title);
     return a;
   }
   if (a) a.parentNode.replaceChild(e, a);
@@ -122,25 +118,8 @@ pv.SvgScene.title = function(e, s) {
 /** TODO */
 pv.SvgScene.dispatch = pv.listener(function(e) {
   var t = e.target.$scene;
-  if (t) t.scenes.mark.dispatch(e, t.scenes, t.index);
+  if (t) pv.Mark.dispatch(e, t.scenes, t.index);
 });
 
-/** @private */
-pv.SvgScene.implicit = {
-  svg: {
-    "shape-rendering": "auto",
-    "x": 0,
-    "y": 0,
-    "dy": 0,
-    "text-anchor": "start",
-    "transform": "translate(0,0)",
-    "fill": "none",
-    "fill-opacity": 1,
-    "stroke": "none",
-    "stroke-opacity": 1,
-    "stroke-width": 1.5
-  },
-  css: {
-    "font": "10px sans-serif"
-  }
-};
+/** @private Do nothing when rendering undefined mark types. */
+pv.SvgScene.undefined = function() {};

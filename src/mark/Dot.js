@@ -20,6 +20,7 @@ pv.Dot = function() {
 
 pv.Dot.prototype = pv.extend(pv.Mark)
     .property("size", Number)
+    .property("radius", Number)
     .property("shape", String)
     .property("angle", Number)
     .property("lineWidth", Number)
@@ -134,45 +135,37 @@ pv.Dot.prototype.defaults = new pv.Dot()
  * @returns {pv.Anchor}
  */
 pv.Dot.prototype.anchor = function(name) {
-  var dot = this;
+  var target = this;
   return pv.Mark.prototype.anchor.call(this, name)
-    .left(function(d) {
+    .left(function() {
+        var s = target.instance();
         switch (this.name()) {
           case "bottom":
           case "top":
-          case "center": return dot.left();
-          case "right": return dot.left() + dot.radius();
+          case "center": return s.left;
+          case "left": return null;
         }
-        return null;
+        return s.left + s.radius;
       })
-    .right(function(d) {
-        switch (this.name()) {
-          case "bottom":
-          case "top":
-          case "center": return dot.right();
-          case "left": return dot.right() + dot.radius();
-        }
-        return null;
+    .right(function() {
+        var s = target.instance();
+        return this.name() == "left" ? s.right + s.radius : null;
       })
-    .top(function(d) {
+    .top(function() {
+        var s = target.instance();
         switch (this.name()) {
           case "left":
           case "right":
-          case "center": return dot.top();
-          case "bottom": return dot.top() + dot.radius();
+          case "center": return s.top;
+          case "top": return null;
         }
-        return null;
+        return s.top + s.radius;
       })
-    .bottom(function(d) {
-        switch (this.name()) {
-          case "left":
-          case "right":
-          case "center": return dot.bottom();
-          case "top": return dot.bottom() + dot.radius();
-        }
-        return null;
+    .bottom(function() {
+        var s = target.instance();
+        return this.name() == "top" ? s.bottom + s.radius : null;
       })
-    .textAlign(function(d) {
+    .textAlign(function() {
         switch (this.name()) {
           case "left": return "right";
           case "bottom":
@@ -181,7 +174,7 @@ pv.Dot.prototype.anchor = function(name) {
         }
         return "left";
       })
-    .textBaseline(function(d) {
+    .textBaseline(function() {
         switch (this.name()) {
           case "right":
           case "left":
@@ -192,12 +185,9 @@ pv.Dot.prototype.anchor = function(name) {
       });
 };
 
-/**
- * Returns the radius of the dot, which is defined to be the square root of the
- * {@link #size} property.
- *
- * @returns {number} the radius.
- */
-pv.Dot.prototype.radius = function() {
-  return Math.sqrt(this.size());
+/** @private Sets radius based on size or vice versa. */
+pv.Dot.prototype.buildImplied = function(s) {
+  if (s.radius == null) s.radius = Math.sqrt(s.size);
+  else if (s.size == null) s.size = s.radius * s.radius;
+  pv.Mark.prototype.buildImplied.call(this, s);
 };

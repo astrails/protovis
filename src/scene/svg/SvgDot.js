@@ -5,12 +5,11 @@ pv.SvgScene.dot = function(scenes) {
 
     /* visible */
     if (!s.visible) continue;
-    var fill = s.fillStyle || pv.Color.none,
-        stroke = s.strokeStyle || pv.Color.none;
+    var fill = s.fillStyle, stroke = s.strokeStyle;
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */
-    var radius = Math.sqrt(s.size), path;
+    var radius = s.radius, path = null;
     switch (s.shape) {
       case "cross": {
         path = "M" + -radius + "," + -radius
@@ -20,7 +19,7 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "triangle": {
-        var h = radius, w = radius * 2 / Math.sqrt(3);
+        var h = radius, w = radius * 1.1547; // 2 / Math.sqrt(3)
         path = "M0," + h
             + "L" + w +"," + -h
             + " " + -w + "," + -h
@@ -28,7 +27,7 @@ pv.SvgScene.dot = function(scenes) {
         break;
       }
       case "diamond": {
-        radius *= Math.sqrt(2);
+        radius *= 1.414214; // Math.sqrt(2)
         path = "M0," + -radius
             + "L" + radius + ",0"
             + " 0," + radius
@@ -52,19 +51,22 @@ pv.SvgScene.dot = function(scenes) {
 
     /* Use <circle> for circles, <path> for everything else. */
     var svg = {
-      "transform": "translate(" + s.left + "," + s.top + ")",
       "shape-rendering": s.antialias ? null : "crispEdges",
+      "pointer-events": s.events,
       "fill": fill.color,
       "fill-opacity": fill.opacity || null,
       "stroke": stroke.color,
       "stroke-opacity": stroke.opacity || null,
-      "stroke-width": stroke.opacity ? s.lineWidth : null
+      "stroke-width": stroke.opacity ? s.lineWidth / this.scale : null
     };
     if (path) {
+      svg.transform = "translate(" + s.left + "," + s.top + ")";
       if (s.angle) svg.transform += " rotate(" + 180 * s.angle / Math.PI + ")";
       svg.d = path;
       e = this.expect(e, "path", svg);
     } else {
+      svg.cx = s.left;
+      svg.cy = s.top;
       svg.r = radius;
       e = this.expect(e, "circle", svg);
     }

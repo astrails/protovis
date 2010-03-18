@@ -1,18 +1,16 @@
-data/Matrix.js
+data/Transform.js
 - documentation
 
-data/Scale.js
-- consolidate code between scale implementations
+layout/Layout.js
+- use private data, or at least standardize which attributes are populated
+- rename: x -> left, y -> top, angle -> textAngle?
 
-layout/Layot.js
-- use def("init") to initialize rather than depend on data (link inheritance)
-- consolidate code between layout implementations
-- documentation across implementations
-- allow or require pv.Dom.Node as input, rather than maps?
-- standardize node.depth, node.size? otherwise hide internal attributes?
-- allow interactive expanding / collapsing of tree nodes?
-- layouts should allow user to change the associated data
-- layouts should not cache by default
+layout/Force.js
+- copy: x -> left, y -> top
+- example with interactive filtering of links and nodes
+
+layout/Network.js
+- add reset() method to clear cached layout
 
 layout/Tree.js
 - allow depth and breadth offset to be computed automatically
@@ -20,32 +18,33 @@ layout/Tree.js
 layout/{Cluster,Partition}.js
 - support customized inner/outer radius
 
-layout/Force.js
-- specify nodes and links using methods, rather than ctor arguments?
-- behaves differently from pv.dom, kind of confusing
-- cooling schedule to reduce cpu usage as layout stabilizes
-- automatic support for computing layout statically
-
-layout/Treemap.js
-- use pv.Dom.Node
-
-layout/Stack.js
-- make class rather than property
+mark/Anchor.js
+- support anchors across panels: mirrored descent (fallback to last?)
 
 mark/Mark.js
-- standardize window.event access for event handlers?
 - antialias doesn't always work as expected; requires pixel rounding?
-- event("ignore") to disable pointer-events?
-- dot-dash strokes using stroke-dasharray
 
-mark/Panel.js
-- support transform on panel directly, making pv.Behavior.transform more useful
-- overflow documentation
+mark/Area.js
+- {min,max}:name psuedo-anchors for center labeling?
 
 behavior/*
 - documentation, implementation, etc.
-- pv.Mark.context to encapsulate item reference, evaluation state?
-- should pv.Behavior.{drag,transform} automatically redraw?
+- should behaviors automatically re-render? render hooks (e.g., panel-transform)
+
+behavior/Select.js
+- rewrite
+
+behavior/Point.js
+- better support for area, wedge, and bar
+
+behavior/Pan.js
+- lock one axis
+- specify bounds on panning
+
+behavior/Zoom.js
+- firefox support for mousewheel
+- specify bounds on zoom level
+- non-uniform zooms (e.g., in time series, zoom time dimension only)?
 
 physics/Simulation.js
 - use a constraint rather than `fixed` property to allow dragging?
@@ -53,12 +52,14 @@ physics/Simulation.js
 physics/LinkConstraint.js
 - should support an alpha parameter, like pv.Constraint.position
 
+scene/*
+- use array push rather than string concatentation to improve performance?
+
 text/CsvFormat.js
 - return an object with a .format method, or the format function?
 - should other Formats return a function with a self-reference .format method?
 
 *
-- remove all global variables, then remove pv-{start,end}.js
 - use Object.create instead of pv.extend, if available
 - use === and !== instead of == and !=
 - force type conversion of input arguments in public API?
