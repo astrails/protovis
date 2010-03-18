@@ -55,6 +55,6 @@ pv.VmlScene.dispatch = pv.listener(function(e) {
   var t = e.srcElement.$scene;
   if (t) {
     e.preventDefault = function () { this.returnValue = false; };
-    t.scenes.mark.dispatch(e, t.scenes, t.index);
+    pv.Mark.dispatch(e, t.scenes, t.index);
   }
 });

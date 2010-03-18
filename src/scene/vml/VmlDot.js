@@ -9,7 +9,7 @@ pv.VmlScene.dot = function(scenes) {
     if (!fill.opacity && !stroke.opacity) continue;
 
     /* points */
-    var radius = Math.round(Math.sqrt(s.size));
+    var radius = Math.round(s.radius);
     var d;
     switch (s.shape) {
       case "cross": {
@@ -20,7 +20,7 @@ pv.VmlScene.dot = function(scenes) {
         break;
       }
       case "triangle": {
-        var h = radius, w = Math.round(radius * 2 / Math.sqrt(3));
+        var h = radius, w = Math.round(radius * 1.1547); // 2 / Math.sqrt(3)
         d = "m0," + h
           + "l" + w +"," + -h
           + " " + -w + "," + -h
@@ -28,7 +28,7 @@ pv.VmlScene.dot = function(scenes) {
         break;
       }
       case "diamond": {
-        radius = Math.round(radius * Math.sqrt(2));
+        radius = Math.round(radius * 1.414214); // Math.sqrt(2)
         d = "m0," + -radius
           + "l" + radius + ",0"
           + " 0," + radius
