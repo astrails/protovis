@@ -12,8 +12,8 @@ pv.Scene = document.implementation.hasFeature(
  * @param scenes {array} an array of scene nodes.
  */
 pv.Scene.updateAll = function(scenes) {
-  if (!scenes.length) return;
-  if ((scenes[0].reverse)
+  if (scenes.length
+      && scenes[0].reverse
       && (scenes.type != "line")
       && (scenes.type != "area")) {
     var reversed = pv.extend(scenes);
