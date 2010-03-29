@@ -1,20 +1,23 @@
-data/PowerScale.js
-- finish implementation
+*
+- use === and !== instead of == and !=
+- force type conversion of input arguments in public API?
+- use array push rather than string concatentation to improve performance?
+- use Object.create instead of pv.extend, if available
 
 data/?
 - AJAX helper? or refer to jQuery
 
-layout/Layot.js
-- other algorithms: ballon, dig-cola, attribute graph, matrix, arc diagram?
+data/Scale.js
+- allow customization of data ticks (e.g., "3 months", "5 minutes")
 
 mark/Mark.js
+- antialias doesn't always work as expected; requires pixel rounding?
 - allow mixin rather than single inheritance?
 - linear and radial gradient fills
 - pattern fills
 - drop shadows, blurring, other graphical effects?
 - animation
 - faster incremental rendering (detect properties)
-- rendering optimizations / minimal SVG?
 - remove first, last, cousin, sibling methods?
 - dot-dash strokes using stroke-dasharray
 
@@ -31,3 +34,10 @@ mark/Label.js
 
 mark/Area.js
 - spline interpolation
+
+mark/Area.Radial.js
+mark/Line.Radial.js
+mark/Bar.Radial.js
+
+physics/LinkConstraint.js
+- should support an alpha parameter, like pv.Constraint.position

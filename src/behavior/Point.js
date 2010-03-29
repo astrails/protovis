@@ -5,21 +5,7 @@ pv.Behavior.point = function(r) {
       ky = 1, // y-dimension cost scale
       r2 = arguments.length ? r * r : 900; // fuzzy radius
 
-  /** @private Creates a fake mouse event of the specified type. */
-  function event(type) {
-    var e;
-    if (document.createEvent) {
-      e = document.createEvent("MouseEvents");
-      e.initEvent(type, true, false);
-    } else {
-      e = document.createEventObject();
-      e.type = type;
-      e.preventDefault = function () { this.returnValue = false; };
-    }
-    return e;
-  }
-
-  /** @Private Search for the mark closest to the mouse. */
+  /** @private Search for the mark closest to the mouse. */
   function search(scene, index) {
     var s = scene[index],
         point = {cost: Infinity};
@@ -63,12 +49,12 @@ pv.Behavior.point = function(r) {
       if (point
           && (unpoint.scene == point.scene)
           && (unpoint.index == point.index)) return;
-      pv.Mark.dispatch(event("unpoint"), unpoint.scene, unpoint.index);
+      pv.Mark.dispatch("unpoint", unpoint.scene, unpoint.index);
     }
 
     /* Point the new target, if there is one. */
     if (unpoint = point) {
-      pv.Mark.dispatch(event("point"), point.scene, point.index);
+      pv.Mark.dispatch("point", point.scene, point.index);
 
       /* Unpoint when the mouse leaves the root panel. */
       pv.listen(this.root.canvas(), "mouseout", mouseout);
@@ -77,7 +63,7 @@ pv.Behavior.point = function(r) {
 
   function mouseout(e) {
     if (unpoint && !pv.ancestor(this, e.relatedTarget)) {
-      pv.Mark.dispatch(event("unpoint"), unpoint.scene, unpoint.index);
+      pv.Mark.dispatch("unpoint", unpoint.scene, unpoint.index);
       unpoint = null;
     }
   }

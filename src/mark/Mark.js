@@ -167,7 +167,7 @@ pv.Mark.prototype.propertyMethod = function(name, def, cast) {
         var defs = this.scene.defs;
         if (arguments.length) {
           defs[name] = {
-            id: (v == undefined) ? 0 : pv.id(),
+            id: (v == null) ? 0 : pv.id(),
             value: ((v != null) && cast) ? cast(v) : v
           };
           return this;
@@ -533,7 +533,7 @@ pv.Mark.prototype.add = function(type) {
  */
 pv.Mark.prototype.def = function(name, v) {
   this.propertyMethod(name, true);
-  return this[name](v);
+  return this[name](arguments.length > 1 ? v : null);
 };
 
 /**
@@ -563,17 +563,52 @@ pv.Mark.prototype.def = function(name, v) {
  * @returns {pv.Anchor} the new anchor.
  */
 pv.Mark.prototype.anchor = function(name) {
-  var target = this;
+  var target = this, scene;
+
+  /* Default anchor name. */
+  if (!arguments.length) name = "center";
+
+  /** @private Find the instances of target that match source. */
+  function instances(source) {
+    var mark = target, index = [];
+
+    /* Mirrored descent. */
+    while (!(scene = mark.scene)) {
+      source = source.parent;
+      index.push({index: source.index, childIndex: mark.childIndex});
+      mark = mark.parent;
+    }
+    while (index.length) {
+      var i = index.pop();
+      scene = scene[i.index].children[i.childIndex];
+    }
+
+    /*
+     * When the anchor target is also an ancestor, as in the case of adding
+     * to a panel anchor, only generate one instance per panel. Also, set
+     * the margins to zero, since they are offset by the enclosing panel.
+     */
+    if (target.hasOwnProperty("index")) {
+      var s = pv.extend(scene[target.index]);
+      s.right = s.top = s.left = s.bottom = 0;
+      return [s];
+    }
+    return scene;
+  }
+
   return new pv.Anchor(this)
     .name(name)
+    .def("$mark.anchor", function() {
+        scene = this.scene.target = instances(this);
+      })
     .data(function() {
-        return target.scene.map(function(s) { return s.data; });
+        return scene.map(function(s) { return s.data; });
       })
     .visible(function() {
-        return target.instance().visible;
+        return scene[this.index].visible;
       })
     .left(function() {
-        var s = target.instance(), w = s.width || 0;
+        var s = scene[this.index], w = s.width || 0;
         switch (this.name()) {
           case "bottom":
           case "top":
@@ -583,7 +618,7 @@ pv.Mark.prototype.anchor = function(name) {
         return s.left + w;
       })
     .top(function() {
-        var s = target.instance(), h = s.height || 0;
+        var s = scene[this.index], h = s.height || 0;
         switch (this.name()) {
           case "left":
           case "right":
@@ -593,11 +628,11 @@ pv.Mark.prototype.anchor = function(name) {
         return s.top + h;
       })
     .right(function() {
-        var s = target.instance();
+        var s = scene[this.index];
         return this.name() == "left" ? s.right + (s.width || 0) : null;
       })
     .bottom(function() {
-        var s = target.instance();
+        var s = scene[this.index];
         return this.name() == "top" ? s.bottom + (s.height || 0) : null;
       })
     .textAlign(function() {
@@ -1090,7 +1125,7 @@ pv.Mark.prototype.mouse = function() {
 
   /* Compute the inverse transform of all enclosing panels. */
   var t = pv.Transform.identity,
-      p = this.properties.transform ? this : this.parent
+      p = this.properties.transform ? this : this.parent,
       pz = [];
   do { pz.push(p); } while (p = p.parent);
   while (p = pz.pop()) t = t.translate(p.left(), p.top()).times(p.transform());
@@ -1231,12 +1266,12 @@ pv.Mark.prototype.context = function(scene, index, f) {
 };
 
 /** @private Execute the event listener, then re-render. */
-pv.Mark.dispatch = function(e, scene, index) {
-  var m = scene.mark, p = scene.parent, l = m.$handlers[e.type];
-  if (!l) return p && pv.Mark.dispatch(e, p, scene.parentIndex);
+pv.Mark.dispatch = function(type, scene, index) {
+  var m = scene.mark, p = scene.parent, l = m.$handlers[type];
+  if (!l) return p && pv.Mark.dispatch(type, p, scene.parentIndex);
   m.context(scene, index, function() {
       m = l.apply(m, pv.Mark.stack);
       if (m && m.render) m.render();
-      e.preventDefault();
     });
+  return true;
 };
