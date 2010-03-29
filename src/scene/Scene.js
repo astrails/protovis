@@ -25,7 +25,7 @@ pv.Scene.updateAll = function(scenes) {
   this.removeSiblings(this[scenes.type](scenes));
 };
 
-/** TODO */
+/** @private Remove siblings following element <i>e</i>. */
 pv.Scene.removeSiblings = function(e) {
   while (e) {
     var n = e.nextSibling;

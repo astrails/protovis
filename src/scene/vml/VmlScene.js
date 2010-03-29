@@ -54,7 +54,10 @@ pv.VmlScene.append = function(e, scenes, index) {
 pv.VmlScene.dispatch = pv.listener(function(e) {
   var t = e.srcElement.$scene;
   if (t) {
-    e.preventDefault = function () { this.returnValue = false; };
-    pv.Mark.dispatch(e, t.scenes, t.index);
+    var type = e.type;
+
+    /* TODO: mousewheel fixes? */
+
+    if (pv.Mark.dispatch(type, t.scenes, t.index)) e.returnValue = false;
   }
 });
