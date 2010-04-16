@@ -1,30 +1,20 @@
-data/Scale.js
-- ignore undefined values when computing min/max for domains
-- greedily convert range to the expected type (for colors?)
-- quantile scales!
-
 layout/Layout.js
-- extend Panel?
-- use private data, or at least standardize which attributes are populated
-- add support for sort() functions as appropriate (e.g., arc); use bind.sort
-- size() functions should be inherited, use bind.size, etc.
+- standardize which attributes are populated
+- add support for sort() functions as appropriate (e.g., arc)
 
 layout/Force.js
 - smarter default rest length / charge force constant
 - allow customization of simulation parameters (e.g., rest length)
-- allow dynamic updates to the graph, preserving simulation (add/remove nodes/liks)
 
-layout/Network.js
-- add reset() method to clear cached layout?
+mark/Mark.js
+- partial redraw for newly-added marks
 
-layout/Tree.js
-- allow depth and breadth offset to be computed automatically
+mark/Panel.js
+- remove()
+- query the visible region (avoid transform invert in panel-transform.html)?
 
 mark/Anchor.js
 - {min,max}:name "singleton" anchors for center labeling on area and line?
-
-mark/Mark.js
-- event handlers should be inherited, queryable? (use bind)
 
 mark/Area.js
 - support for "basis" and "cardinal" interpolation
@@ -32,29 +22,8 @@ mark/Area.js
 mark/Line.js
 - support for "basis" and "cardinal" with segmented lines
 
-behavior/*
-- should behaviors automatically re-render? render hooks (e.g., panel-transform)
-
-behavior/Select.js
-- rewrite
-
 behavior/Point.js
 - better support for area, wedge, and bar
-
-behavior/Pan.js
-- lock one axis
-- specify bounds on panning
-
-behavior/Zoom.js
-- specify bounds on zoom level
-- non-uniform zooms (e.g., in time series, zoom time dimension only)?
-
-physics/Simulation.js
-- use a constraint rather than `fixed` property to allow dragging?
-
-text/CsvFormat.js
-- return an object with a .format method, or the format function?
-- should other Formats return a function with a self-reference .format method?
 
 geo/GeoScale.js
 - determine center point of projection from domain
@@ -63,3 +32,4 @@ geo/GeoScale.js
 
 *
 - documentation
+- port examples
