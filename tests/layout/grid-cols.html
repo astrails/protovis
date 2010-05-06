@@ -16,9 +16,10 @@ var vis = new pv.Panel()
 
 vis.add(pv.Layout.Grid)
     .cols([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
-  .add(pv.Layout.Grid)
+  .cell.add(pv.Layout.Grid)
     .rows(pv.identity)
     .cols(pv.identity)
+  .cell.add(pv.Bar)
     .strokeStyle("#fff")
   .anchor("center").add(pv.Label);
 

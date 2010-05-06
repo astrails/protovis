@@ -23,6 +23,8 @@
  * <li><tt>depth</tt> - the node depth (tier; the root is 0).
  * </ul>
  *
+ * @extends pv.Layout.Hierarchy
+ * @constructor
  * @returns {pv.Layout.Treemap} a treemap layout.
  */
 pv.Layout.Treemap = function() {
@@ -66,6 +68,41 @@ pv.Layout.Treemap.prototype.defaults = new pv.Layout.Treemap()
     .order("ascending"); // ascending, descending, reverse, null
 
 /**
+ * @type boolean
+ * @name pv.Layout.Treemap.prototype.round
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingLeft
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingRight
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingTop
+ */
+
+/**
+ * @type number
+ * @name pv.Layout.Treemap.prototype.paddingBottom
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Treemap.prototype.mode
+ */
+
+/**
+ * @type string
+ * @name pv.Layout.Treemap.prototype.order
+ */
+
+/**
  * Alias for setting the left, right, top and bottom padding properties
  * simultaneously.
  *
@@ -75,26 +112,45 @@ pv.Layout.Treemap.prototype.padding = function(n) {
   return this.paddingLeft(n).paddingRight(n).paddingTop(n).paddingBottom(n);
 };
 
-pv.Layout.Treemap.prototype.$size = Number;
+/** @private */
+pv.Layout.Treemap.prototype.$size = function(d) {
+  return Number(d.nodeValue);
+};
 
+/**
+ * Specifies the sizing function. By default, a sizing function is disabled and
+ * all nodes are given constant size. The sizing function is invoked for each
+ * leaf node in the tree (passed to the constructor).
+ *
+ * <p>For example, if the tree data structure represents a file system, with
+ * files as leaf nodes, and each file has a <tt>bytes</tt> attribute, you can
+ * specify a size function as:
+ *
+ * <pre>.size(function(d) d.bytes)</pre>
+ *
+ * @param {function} f the new sizing function.
+ * @returns {pv.Layout.Treemap} this.
+ */
 pv.Layout.Treemap.prototype.size = function(f) {
   this.$size = pv.functor(f);
   return this;
 };
 
-pv.Layout.Treemap.prototype.init = function() {
-  if (pv.Layout.Hierarchy.prototype.init.call(this)) return;
+/** @private */
+pv.Layout.Treemap.prototype.buildImplied = function(s) {
+  if (pv.Layout.Hierarchy.prototype.buildImplied.call(this, s)) return;
+
   var that = this,
-      nodes = that.nodes(),
+      nodes = s.nodes,
       root = nodes[0],
       stack = pv.Mark.stack,
-      left = that.paddingLeft(),
-      right = that.paddingRight(),
-      top = that.paddingTop(),
-      bottom = that.paddingBottom(),
-      size = function(n) { return n.size; },
-      round = that.round() ? Math.round : Number,
-      mode = that.mode();
+      left = s.paddingLeft,
+      right = s.paddingRight,
+      top = s.paddingTop,
+      bottom = s.paddingBottom,
+      /** @ignore */ size = function(n) { return n.size; },
+      round = s.round ? Math.round : Number,
+      mode = s.mode;
 
   /** @private */
   function slice(row, sum, horizontal, x, y, w, h) {
@@ -215,12 +271,12 @@ pv.Layout.Treemap.prototype.init = function() {
       n.x = n.y = n.dx = n.dy = 0;
       n.size = n.firstChild
           ? pv.sum(n.childNodes, function(n) { return n.size; })
-          : that.$size.apply(that, (stack[0] = n.nodeValue, stack));
+          : that.$size.apply(that, (stack[0] = n, stack));
     });
   stack.shift();
 
   /* Sort. */
-  switch (that.order()) {
+  switch (s.order) {
     case "ascending": {
       root.sort(function(a, b) { return a.size - b.size; });
       break;
@@ -235,7 +291,7 @@ pv.Layout.Treemap.prototype.init = function() {
   /* Recursively compute the layout. */
   root.x = 0;
   root.y = 0;
-  root.dx = that.parent.width();
-  root.dy = that.parent.height();
+  root.dx = s.width;
+  root.dy = s.height;
   root.visitBefore(layout);
 };

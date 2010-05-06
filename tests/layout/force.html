@@ -25,7 +25,8 @@ var vis = new pv.Panel()
 
 var layout = vis.add(pv.Layout.Force)
     .nodes(miserables.nodes)
-    .links(miserables.links);
+    .links(miserables.links)
+    .chargeConstant(-200);
 
 layout.link.add(pv.Line);
 
@@ -34,7 +35,8 @@ layout.node.add(pv.Dot)
     .fillStyle(function(d) d.fix ? "brown" : color(d))
     .strokeStyle(function() this.fillStyle().darker())
     .title(function(d) d.nodeName)
-    .event("mousedown", pv.Behavior.drag());
+    .event("mousedown", pv.Behavior.drag())
+    .event("drag", layout);
 
 vis.render();
 

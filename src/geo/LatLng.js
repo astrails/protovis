@@ -1,22 +1,23 @@
 /**
- * A coordinate class used by the {@code pv.Geo.scale}. There is no explicit
- * constructor corresponding to the class {@code pv.geo.LatLng}; this class
- * merely serves to document the attributes that are present in coordinate
- * descriptions
+ * Abstract; not implemented. There is no explicit constructor; this class
+ * merely serves to document the representation used by {@link pv.Geo.scale}.
  *
- * @class pv.Geo.LatLng
+ * @class Represents a pair of geographic coordinates.
+ *
+ * @name pv.Geo.LatLng
+ * @see pv.Geo.scale
  */
 
 /**
- * The <i>latitude</i>-of the coordinate in degrees; positive is North.
+ * The <i>latitude</i> coordinate in degrees; positive is North.
  *
  * @type number
- * @field pv.Geo.LatLng.prototype.lat
+ * @name pv.Geo.LatLng.prototype.lat
  */
 
 /**
- * The <i>longitude</i>-of the coordinate in degrees; positive is East.
+ * The <i>longitude</i> coordinate in degrees; positive is East.
  *
  * @type number
- * @field pv.Geo.LatLng.prototype.lng
+ * @name pv.Geo.LatLng.prototype.lng
  */

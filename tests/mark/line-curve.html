@@ -49,6 +49,7 @@ vis.add(pv.Line)
     .left(function(d) x(d.x))
     .bottom(function(d) y(d.y))
     .interpolate("cardinal")
+    .tension(0.5)
     .strokeStyle("#f33")
     .lineWidth(2);
 

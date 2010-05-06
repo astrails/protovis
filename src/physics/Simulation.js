@@ -1,14 +1,43 @@
 /**
  * Constructs a new empty simulation.
+ *
+ * @param {array} particles
+ * @returns {pv.Simulation} a new simulation for the specified particles.
+ * @see pv.Simulation
  */
 pv.simulation = function(particles) {
   return new pv.Simulation(particles);
 };
 
 /**
- * A particle simulation.
+ * Constructs a new simulation for the specified particles.
  *
- * @constructor Constructs a new empty simulation.
+ * @class Represents a particle simulation. Particles are massive points in
+ * two-dimensional space. Forces can be applied to these particles, causing them
+ * to move. Constraints can also be applied to restrict particle movement, for
+ * example, constraining particles to a fixed position, or simulating collision
+ * between circular particles with area.
+ *
+ * <p>The simulation uses <a
+ * href="http://en.wikipedia.org/wiki/Verlet_integration">Position Verlet</a>
+ * integration, due to the ease with which <a
+ * href="http://www.teknikus.dk/tj/gdc2001.htm">geometric constraints</a> can be
+ * implemented. For each time step, Verlet integration is performed, new forces
+ * are accumulated, and then constraints are applied.
+ *
+ * <p>The simulation makes two simplifying assumptions: all particles are
+ * equal-mass, and the time step of the simulation is fixed. It would be easy to
+ * incorporate variable-mass particles as a future enhancement. Variable time
+ * steps are also possible, but are likely to introduce instability in the
+ * simulation.
+ *
+ * <p>This class can be used directly to simulate particle interaction.
+ * Alternatively, for network diagrams, see {@link pv.Layout.Force}.
+ *
+ * @param {array} particles an array of {@link pv.Particle}s to simulate.
+ * @see pv.Layout.Force
+ * @see pv.Force
+ * @see pv.Constraint
  */
 pv.Simulation = function(particles) {
   for (var i = 0; i < particles.length; i++) this.particle(particles[i]);
@@ -18,24 +47,27 @@ pv.Simulation = function(particles) {
  * The particles in the simulation. Particles are stored as a linked list; this
  * field represents the first particle in the simulation.
  *
+ * @field
  * @type pv.Particle
- * @field pv.Simulation.prototype.particles
+ * @name pv.Simulation.prototype.particles
  */
 
 /**
  * The forces in the simulation. Forces are stored as a linked list; this field
  * represents the first force in the simulation.
  *
+ * @field
  * @type pv.Force
- * @field pv.Simulation.prototype.forces
+ * @name pv.Simulation.prototype.forces
  */
 
 /**
  * The constraints in the simulation. Constraints are stored as a linked list;
  * this field represents the first constraint in the simulation.
  *
+ * @field
  * @type pv.Constraint
- * @field pv.Simulation.prototype.constraints
+ * @name pv.Simulation.prototype.constraints
  */
 
 /**

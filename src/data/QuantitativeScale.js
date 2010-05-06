@@ -1,36 +1,40 @@
 /**
- * Returns an abstract quantitative scale for the specified domain. The
- * arguments to this constructor are optional, and equivalent to calling {@link
- * #domain}.
+ * Returns a default quantitative, linear, scale for the specified domain. The
+ * arguments to this constructor are optional, and equivalent to calling
+ * {@link #domain}. The default domain and range are [0,1].
  *
- * @class Represents an abstract quantitative scale. <style
- * type="text/css">sub{line-height:0}</style> A quantitative scale represents a
- * 1-dimensional transformation from a numeric domain of input data
- * [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of pixels
- * [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In addition to readability,
- * scales offer several useful features:
+ * <p>This constructor is typically not used directly; see one of the
+ * quantitative scale implementations instead.
  *
- * <p>1. The range can be expressed in colors, rather than pixels. Changing the
- * example above to
+ * @class Represents an abstract quantitative scale; a function that performs a
+ * numeric transformation. This class is typically not used directly; see one of
+ * the quantitative scale implementations (linear, log, root, etc.)
+ * instead. <style type="text/css">sub{line-height:0}</style> A quantitative
+ * scale represents a 1-dimensional transformation from a numeric domain of
+ * input data [<i>d<sub>0</sub></i>, <i>d<sub>1</sub></i>] to a numeric range of
+ * pixels [<i>r<sub>0</sub></i>, <i>r<sub>1</sub></i>]. In addition to
+ * readability, scales offer several useful features:
  *
- * <pre>.fillStyle(pv.Scale.linear(0, 100).range("red", "green"))</pre>
+ * <p>1. The range can be expressed in colors, rather than pixels. For example:
  *
- * will cause it to fill the marks "red" on an input value of 0, "green" on an
- * input value of 100, and some color in-between for intermediate values.
+ * <pre>    .fillStyle(pv.Scale.linear(0, 100).range("red", "green"))</pre>
+ *
+ * will fill the marks "red" on an input value of 0, "green" on an input value
+ * of 100, and some color in-between for intermediate values.
  *
  * <p>2. The domain and range can be subdivided for a non-uniform
  * transformation. For example, you may want a diverging color scale that is
  * increasingly red for negative values, and increasingly green for positive
  * values:
  *
- * <pre>.fillStyle(pv.Scale.linear(-1, 0, 1).range("red", "white", "green"))</pre>
+ * <pre>    .fillStyle(pv.Scale.linear(-1, 0, 1).range("red", "white", "green"))</pre>
  *
  * The domain can be specified as a series of <i>n</i> monotonically-increasing
  * values; the range must also be specified as <i>n</i> values, resulting in
  * <i>n - 1</i> contiguous linear scales.
  *
- * <p>3. Quantitative scales can be inverted for interaction. The {@link
- * #invert} method takes a value in the output range, and returns the
+ * <p>3. Quantitative scales can be inverted for interaction. The
+ * {@link #invert} method takes a value in the output range, and returns the
  * corresponding value in the input domain. This is frequently used to convert
  * the mouse location (see {@link pv.Mark#mouse}) to a value in the input
  * domain. Note that inversion is only supported for numeric ranges, and not
@@ -46,8 +50,11 @@
  * derived from data, you can use {@link #nice} to round these values down and
  * up to even numbers.
  *
- * @param {number...} domain... domain values.
- * @returns {pv.Scale.quantitative} a quantitative scale.
+ * @param {number...} domain... optional domain values.
+ * @see pv.Scale.linear
+ * @see pv.Scale.log
+ * @see pv.Scale.root
+ * @extends pv.Scale
  */
 pv.Scale.quantitative = function() {
   var d = [0, 1], // default domain
@@ -75,8 +82,8 @@ pv.Scale.quantitative = function() {
 
   /** @private */
   scale.transform = function(forward, inverse) {
-    f = function(x) { return n ? -forward(-x) : forward(x); };
-    g = function(y) { return n ? -inverse(-y) : inverse(y); };
+    /** @ignore */ f = function(x) { return n ? -forward(-x) : forward(x); };
+    /** @ignore */ g = function(y) { return n ? -inverse(-y) : inverse(y); };
     l = d.map(f);
     return this;
   };
@@ -92,7 +99,7 @@ pv.Scale.quantitative = function() {
    * non-uniform scales, multiple values can be specified. Values can be derived
    * from data using {@link pv.min} and {@link pv.max}. For example:
    *
-   * <pre>.domain(0, pv.max(array))</pre>
+   * <pre>    .domain(0, pv.max(array))</pre>
    *
    * An alternative method for deriving minimum and maximum values from data
    * follows.
@@ -104,13 +111,13 @@ pv.Scale.quantitative = function() {
    * data, followed by zero, one or two accessor functions. For example, if the
    * array of data is just an array of numbers:
    *
-   * <pre>.domain(array)</pre>
+   * <pre>    .domain(array)</pre>
    *
    * On the other hand, if the array elements are objects representing stock
    * values per day, and the domain should consider the stock's daily low and
    * daily high:
    *
-   * <pre>.domain(array, function(d) d.low, function(d) d.high)</pre>
+   * <pre>    .domain(array, function(d) d.low, function(d) d.high)</pre>
    *
    * The first method of setting the domain is preferred because it is more
    * explicit; setting the domain using this second method should be used only
@@ -159,7 +166,7 @@ pv.Scale.quantitative = function() {
    * equivalent strings. For a diverging scale, or other subdivided non-uniform
    * scales, multiple values can be specified. For example:
    *
-   * <pre>.range("red", "white", "green")</pre>
+   * <pre>    .range("red", "white", "green")</pre>
    *
    * <p>Currently, only numbers and colors are supported as range values. The
    * number of range values must exactly match the number of domain values, or
@@ -256,35 +263,35 @@ pv.Scale.quantitative = function() {
       if (span >= 2 * 31536e6) {
         precision = 31536e6;
         format = "%Y";
-        increment = function(d) { d.setFullYear(d.getFullYear() + step); };
+        /** @ignore */ increment = function(d) { d.setFullYear(d.getFullYear() + step); };
       } else if (span >= 2 * 2592e6) {
         precision = 2592e6;
         format = "%m/%Y";
-        increment = function(d) { d.setMonth(d.getMonth() + step); };
+        /** @ignore */ increment = function(d) { d.setMonth(d.getMonth() + step); };
       } else if (span >= 2 * 6048e5) {
         precision = 6048e5;
         format = "%m/%d";
-        increment = function(d) { d.setDate(d.getDate() + 7 * step); };
+        /** @ignore */ increment = function(d) { d.setDate(d.getDate() + 7 * step); };
       } else if (span >= 2 * 864e5) {
         precision = 864e5;
         format = "%m/%d";
-        increment = function(d) { d.setDate(d.getDate() + step); };
+        /** @ignore */ increment = function(d) { d.setDate(d.getDate() + step); };
       } else if (span >= 2 * 36e5) {
         precision = 36e5;
         format = "%I:%M %p";
-        increment = function(d) { d.setHours(d.getHours() + step); };
+        /** @ignore */ increment = function(d) { d.setHours(d.getHours() + step); };
       } else if (span >= 3 * 6e4) {
         precision = 6e4;
         format = "%I:%M %p";
-        increment = function(d) { d.setMinutes(d.getMinutes() + step); };
+        /** @ignore */ increment = function(d) { d.setMinutes(d.getMinutes() + step); };
       } else if (span >= 3 * 1e3) {
         precision = 1e3;
         format = "%I:%M:%S";
-        increment = function(d) { d.setSeconds(d.getSeconds() + step); };
+        /** @ignore */ increment = function(d) { d.setSeconds(d.getSeconds() + step); };
       } else {
         precision = 1;
         format = "%S.%Qs";
-        increment = function(d) { d.setTime(d.getTime() + step); };
+        /** @ignore */ increment = function(d) { d.setTime(d.getTime() + step); };
       }
       tickFormat = pv.Format.date(format);
 
@@ -348,7 +355,7 @@ pv.Scale.quantitative = function() {
     var start = Math.ceil(min / step) * step,
         end = Math.floor(max / step) * step,
         precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
-    tickFormat = function(x) { return x.toFixed(precision); };
+    /** @ignore */ tickFormat = function(x) { return x.toFixed(precision); };
     var ticks = pv.range(start, end + step, step);
     return reverse ? ticks.reverse() : ticks;
   };
@@ -407,11 +414,11 @@ pv.Scale.quantitative = function() {
    * that have a <tt>score</tt> attribute with the domain [0, 1], the height
    * property could be specified as:
    *
-   * <pre>.height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
+   * <pre>    .height(pv.Scale.linear().range(0, 480).by(function(d) d.score))</pre>
    *
    * This is equivalent to:
    *
-   * <pre>.height(function(d) d.score * 480)</pre>
+   * <pre>    .height(function(d) d.score * 480)</pre>
    *
    * This method should be used judiciously; it is typically more clear to
    * invoke the scale directly, passing in the value to be scaled.
