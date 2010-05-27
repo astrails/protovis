@@ -616,6 +616,10 @@ pv.Mark.prototype.anchorTarget = function() {
 /**
  * Alias for setting the left, right, top and bottom properties simultaneously.
  *
+ * @see #left
+ * @see #right
+ * @see #top
+ * @see #bottom
  * @returns {pv.Mark} this.
  */
 pv.Mark.prototype.margin = function(n) {
@@ -1045,8 +1049,8 @@ pv.Mark.prototype.buildImplied = function(s) {
 pv.Mark.prototype.mouse = function() {
 
   /* Compute xy-coordinates relative to the panel. */
-  var x = pv.event.pageX,
-      y = pv.event.pageY,
+  var x = pv.event.pageX || 0,
+      y = pv.event.pageY || 0,
       n = this.root.canvas();
 
   // Calculate pageX/Y if missing and clientX/Y available

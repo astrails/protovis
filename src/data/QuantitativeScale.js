@@ -260,23 +260,23 @@ pv.Scale.quantitative = function() {
       }
 
       var precision, format, increment, step = 1;
-      if (span >= 2 * 31536e6) {
+      if (span >= 3 * 31536e6) {
         precision = 31536e6;
         format = "%Y";
         /** @ignore */ increment = function(d) { d.setFullYear(d.getFullYear() + step); };
-      } else if (span >= 2 * 2592e6) {
+      } else if (span >= 3 * 2592e6) {
         precision = 2592e6;
         format = "%m/%Y";
         /** @ignore */ increment = function(d) { d.setMonth(d.getMonth() + step); };
-      } else if (span >= 2 * 6048e5) {
+      } else if (span >= 3 * 6048e5) {
         precision = 6048e5;
         format = "%m/%d";
         /** @ignore */ increment = function(d) { d.setDate(d.getDate() + 7 * step); };
-      } else if (span >= 2 * 864e5) {
+      } else if (span >= 3 * 864e5) {
         precision = 864e5;
         format = "%m/%d";
         /** @ignore */ increment = function(d) { d.setDate(d.getDate() + step); };
-      } else if (span >= 2 * 36e5) {
+      } else if (span >= 3 * 36e5) {
         precision = 36e5;
         format = "%I:%M %p";
         /** @ignore */ increment = function(d) { d.setHours(d.getHours() + step); };
@@ -353,9 +353,9 @@ pv.Scale.quantitative = function() {
     else if (err <= .35) step *= 5;
     else if (err <= .75) step *= 2;
     var start = Math.ceil(min / step) * step,
-        end = Math.floor(max / step) * step,
-        precision = Math.max(0, -Math.floor(pv.log(step, 10) + .01));
-    /** @ignore */ tickFormat = function(x) { return x.toFixed(precision); };
+        end = Math.floor(max / step) * step;
+    tickFormat = pv.Format.number()
+        .fractionDigits(Math.max(0, -Math.floor(pv.log(step, 10) + .01)));
     var ticks = pv.range(start, end + step, step);
     return reverse ? ticks.reverse() : ticks;
   };

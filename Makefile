@@ -91,10 +91,12 @@ JS_LAYOUT_FILES = \
 	src/layout/Horizon.js \
 	src/layout/Rollup.js \
 	src/layout/Matrix.js \
+	src/layout/Bullet.js \
 	src/behavior/Behavior.js \
 	src/behavior/Drag.js \
 	src/behavior/Point.js \
 	src/behavior/Select.js \
+	src/behavior/Resize.js \
 	src/behavior/Pan.js \
 	src/behavior/Zoom.js
 
