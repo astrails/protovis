@@ -106,7 +106,7 @@ pv.Behavior.drag = function() {
     scene = null;
   }
 
-  pv.listen(window, "mousemove", mousemove);
-  pv.listen(window, "mouseup", mouseup);
+  pv.listen(window.document, "mousemove", mousemove);
+  pv.listen(window.document, "mouseup", mouseup);
   return mousedown;
 };
