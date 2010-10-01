@@ -43,7 +43,7 @@ pv.VmlScene.wedge = function(scenes) {
     vml.root.style.top = s.top;
     vml.root.style.width = "100%";
     vml.root.style.height = "100%";
-    vml.root.style.cursor = s.cursor;
+    vml.root.style.cursor = s.cursor || "auto";
     vml.root.style.antialias = s.antialias;
     vml.root.title = s.title || "";
 

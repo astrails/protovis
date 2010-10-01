@@ -17,7 +17,7 @@ pv.VmlScene.image = function(scenes) {
     vml.root.style.top = s.top;
     vml.root.style.width = s.width;
     vml.root.style.height = s.height;
-    vml.root.style.cursor = s.cursor;
+    vml.root.style.cursor = s.cursor || "auto";
     vml.root.src = s.url;
     vml.root.title = s.title || "";
 

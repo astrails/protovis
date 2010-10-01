@@ -17,7 +17,7 @@ pv.VmlScene.bar = function(scenes) {
     vml.root.style.top = s.top;
     vml.root.style.width = s.width;
     vml.root.style.height = s.height;
-    vml.root.style.cursor = s.cursor;
+    vml.root.style.cursor = s.cursor || "auto";
     vml.root.style.antialias = s.antialias;
     vml.root.title = s.title || "";
 

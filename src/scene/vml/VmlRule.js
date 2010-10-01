@@ -14,7 +14,7 @@ pv.VmlScene.rule = function(scenes) {
 
     /* line */
     vml.root.title = s.title;
-    vml.root.style.cursor = s.cursor;
+    vml.root.style.cursor = s.cursor || "auto";
     vml.root.style.antialias = s.antialias;
     vml.root.from = s.left + "," + s.top;
     vml.root.to = (s.left + s.width - (s.width == 0 ? 0 : 1)) + "," + (s.top + s.height - (s.height == 0 ? 0 : 1));

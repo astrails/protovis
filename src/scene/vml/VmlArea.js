@@ -28,7 +28,7 @@ pv.VmlScene.area = function(scenes) {
   vml.stroke = this.expect("v:stroke", vml.fill.nextSibling, vml.root);
 
   /* polygon */
-  vml.root.style.cursor = s.cursor;
+  vml.root.style.cursor = s.cursor || "auto";
   vml.root.style.antialias = s.antialias;
   vml.root.title = s.title || "";
   // Changing the 'points' attribute produces the error "Object doesn't
