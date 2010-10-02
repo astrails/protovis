@@ -50,6 +50,7 @@ pv.VmlScene.panel = function(scenes) {
     e.style.position = "absolute";
     e.style.width = width;
     e.style.height = height;
+    e.style.overflow = s.overflow;
     e.stroked = false;
     e.filled = false;
     e = this.append(e, scenes, i);
