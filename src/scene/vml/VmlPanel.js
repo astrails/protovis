@@ -5,7 +5,7 @@
  */
 
 pv.VmlScene.panel = function(scenes) {
-  var g = scenes.$g, e = g && g.firstChild;
+  var g = scenes.$g;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -41,12 +41,11 @@ pv.VmlScene.panel = function(scenes) {
       // Adjust for 1 pixel VML margin that I can find no other way of removing.
       g.style.top = "-1px";
       g.style.left = "-1px";
-      if (typeof e == "undefined") e = g.firstChild;
     }
 
     // v:group doesn't get the full width and height unless it has
     // an inner shape with full width and height.
-    e = this.expect("v:rect", e);
+    var e = this.expect("v:rect", g.firstChild);
     e.style.position = "absolute";
     e.style.width = width;
     e.style.height = height;
