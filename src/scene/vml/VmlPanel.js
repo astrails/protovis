@@ -5,7 +5,7 @@
  */
 
 pv.VmlScene.panel = function(scenes) {
-  var g = scenes.$g;
+  var g = scenes.$g, e = g && g.firstChild;
   for (var i = 0; i < scenes.length; i++) {
     var s = scenes[i];
 
@@ -22,7 +22,10 @@ pv.VmlScene.panel = function(scenes) {
       s.canvas.style.width = width;
       s.canvas.style.height = height;
       s.canvas.style.overflow = "hidden";
-      g = s.canvas.firstChild;
+      if (g && (g.parentNode != s.canvas)) {
+        g = s.canvas.firstChild;
+        e = g && g.firstChild;
+      }
       if (!g) {
         s.canvas.appendChild(g = this.create("v:group"));
         g.onclick
@@ -32,6 +35,7 @@ pv.VmlScene.panel = function(scenes) {
             = g.onmouseout
             = g.onmouseover
             = pv.VmlScene.dispatch;
+        e = g.firstChild;
       }
       scenes.$g = g;
       g.style.position = "relative";
@@ -45,7 +49,7 @@ pv.VmlScene.panel = function(scenes) {
 
     // v:group doesn't get the full width and height unless it has
     // an inner shape with full width and height.
-    var e = this.expect("v:rect", g.firstChild);
+    e = this.expect("v:rect", e);
     e.style.position = "absolute";
     e.style.width = width;
     e.style.height = height;
