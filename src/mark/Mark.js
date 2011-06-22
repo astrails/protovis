@@ -1077,6 +1077,11 @@ pv.Mark.prototype.mouse = function() {
       y = (pv.renderer() == 'svgweb' ? pv.event.clientY * 1 : pv.event.pageY) || 0,
       n = this.root.canvas();
 
+      if ( x == undefined && pv.event.clientX != undefined ) {
+        var doc = document.documentElement, body = document.body;
+        x = pv.event.clientX + (doc && doc.scrollLeft || body && body.scrollLeft || 0) - (doc && doc.clientLeft || body && body.clientLeft || 0);
+        y = pv.event.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0) - (doc && doc.clientTop  || body && body.clientTop  || 0);
+      }
       /* Compute xy-coordinates relative to the panel.
        * This is not necessary if we're using svgweb, as svgweb gives us
        * the necessary relative co-ordinates anyway (well, it seems to

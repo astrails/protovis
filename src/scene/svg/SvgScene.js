@@ -2,7 +2,7 @@
  * @private
  * @namespace
  */
-pv.Scene = pv.SvgScene = {
+pv.SvgScene = {
   /* Various namespaces. */
   svg: "http://www.w3.org/2000/svg",
   xmlns: "http://www.w3.org/2000/xmlns",
@@ -46,25 +46,6 @@ pv.Scene = pv.SvgScene = {
       "font": "10px sans-serif"
     }
   }
-};
-
-/**
- * Updates the display for the specified array of scene nodes.
- *
- * @param scenes {array} an array of scene nodes.
- */
-pv.SvgScene.updateAll = function(scenes) {
-  if (scenes.length
-      && scenes[0].reverse
-      && (scenes.type != "line")
-      && (scenes.type != "area")) {
-    var reversed = pv.extend(scenes);
-    for (var i = 0, j = scenes.length - 1; j >= 0; i++, j--) {
-      reversed[i] = scenes[j];
-    }
-    scenes = reversed;
-  }
-  this.removeSiblings(this[scenes.type](scenes));
 };
 
 /**
@@ -206,15 +187,6 @@ pv.SvgScene.dispatch = pv.listener(function(e) {
     if (pv.Mark.dispatch(type, t.scenes, t.index)) e.preventDefault();
   }
 });
-
-/** @private Remove siblings following element <i>e</i>. */
-pv.SvgScene.removeSiblings = function(e) {
-  while (e) {
-    var n = e.nextSibling;
-    e.parentNode.removeChild(e);
-    e = n;
-  }
-};
 
 /** @private Do nothing when rendering undefined mark types. */
 pv.SvgScene.undefined = function() {};

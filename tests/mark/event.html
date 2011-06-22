@@ -14,8 +14,8 @@ var vis = new pv.Panel()
     .strokeStyle("black")
     .lineWidth(10)
     .fillStyle("green")
-    .event("mouseover", function() label.text(pv.event))
-    .event("mouseout", function() label.text(""));
+    .event("mouseover", function() label.text(pv.event.type))
+    .event("mouseout", function() label.text(pv.event.type));
 
 var label = vis.anchor("center").add(pv.Label);
 

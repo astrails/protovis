@@ -125,8 +125,8 @@ pv.listen = function(target, type, listener) {
 pv.listener = function(f) {
   return f.$listener || (f.$listener = function(e) {
       try {
-        pv.event = e;
-        return f.call(this, e);
+        pv.event = e || window.event;
+        return f.call(this, pv.event);
       } finally {
         delete pv.event;
       }
